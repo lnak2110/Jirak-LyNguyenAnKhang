@@ -54,12 +54,12 @@ export const {
   },
 };
 
-export const http = axios.create({
+export const axiosAuth = axios.create({
   baseURL: process.env.REACT_APP_DOMAIN,
   timeout: 30000,
 });
 
-http.interceptors.request.use(
+axiosAuth.interceptors.request.use(
   (config: AxiosRequestConfig) => {
     // config.headers = {
     //   ...config.headers,

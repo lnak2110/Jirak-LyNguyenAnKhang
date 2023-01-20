@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
-import { Route, Routes } from 'react-router';
+import { Navigate, Route, Routes } from 'react-router';
 import { Provider } from 'react-redux/es/exports';
 import store from './redux/configStore';
 import Home from './pages/home/Home';
@@ -21,6 +21,7 @@ root.render(
           <Route index element={<Home />}></Route>
           <Route path="/register" element={<Register />}></Route>
           <Route path="/login" element={<Login />}></Route>
+          <Route path="*" element={<Navigate to="/" />}></Route>
         </Routes>
       </BrowserRouter>
     </Provider>

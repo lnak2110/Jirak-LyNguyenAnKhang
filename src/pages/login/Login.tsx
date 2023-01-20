@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
@@ -12,8 +15,41 @@ import InputAdornment from '@mui/material/InputAdornment';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
 
-export default function SignInSide() {
+type FormInputs = {
+  email: string;
+  password: string;
+};
+
+const schema = yup
+  .object()
+  .shape({
+    email: yup
+      .string()
+      .trim()
+      .required('Email cannot be blank!')
+      .email('Email is invalid!'),
+    password: yup
+      .string()
+      .trim()
+      .required('Password cannot be blank!')
+      .min(4, 'Password must be between 4 - 10 characters!')
+      .max(10, 'Password must be between 4 - 10 characters!'),
+  })
+  .required();
+
+const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormInputs>({
+    mode: 'onTouched',
+    resolver: yupResolver(schema),
+  });
+
+  const onSubmit = (data: FormInputs) => console.log(data);
 
   const handleClickShowPassword = () => {
     setShowPassword((show) => !show);
@@ -63,25 +99,34 @@ export default function SignInSide() {
           <Typography component="h1" variant="h3" gutterBottom>
             Login
           </Typography>
-          <Box component="form" noValidate sx={{ mt: 1 }}>
+          <Box
+            component="form"
+            noValidate
+            sx={{ mt: 1 }}
+            onSubmit={handleSubmit(onSubmit)}
+          >
             <TextField
               margin="normal"
               required
               fullWidth
               id="email"
               label="Email Address"
-              name="email"
               autoComplete="email"
+              {...register('email')}
+              error={!!errors.email?.message}
+              helperText={errors.email?.message}
             />
             <TextField
               margin="normal"
               required
               fullWidth
-              name="password"
               label="Password"
               type={showPassword ? 'text' : 'password'}
               id="password"
               autoComplete="password"
+              {...register('password')}
+              error={!!errors.password?.message}
+              helperText={errors.password?.message}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -104,12 +149,7 @@ export default function SignInSide() {
             >
               Log in
             </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
+            <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link component={NavLink} to="/register" variant="body2">
                   Don't have an account? Register now!
@@ -121,4 +161,6 @@ export default function SignInSide() {
       </Grid>
     </Grid>
   );
-}
+};
+
+export default Login;
