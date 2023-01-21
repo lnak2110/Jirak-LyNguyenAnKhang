@@ -3,6 +3,8 @@ import { NavLink } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { useAppDispatch, useAppSelector } from '../../redux/configStore';
+import { registerApi } from '../../redux/reducers/userReducer';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
@@ -15,8 +17,10 @@ import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { useAppDispatch, useAppSelector } from '../../redux/configStore';
-import { registerApi } from '../../redux/reducers/userReducer';
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
+import Alert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
 
 export type RegisterFormInputs = {
   name: string;
@@ -53,7 +57,9 @@ const schema = yup
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const { isLoading } = useAppSelector((state) => state.userReducer);
+  const { isLoading, errorMessage } = useAppSelector(
+    (state) => state.userReducer
+  );
   const dispatch = useAppDispatch();
 
   const {
@@ -179,6 +185,22 @@ const Register = () => {
           </Grid>
         </Box>
       </Box>
+      {isLoading && (
+        <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={true}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      )}
+      <Snackbar
+        open={errorMessage ? true : false}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert severity="error" sx={{ width: '100%' }}>
+          {errorMessage}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };
