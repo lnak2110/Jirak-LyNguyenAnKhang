@@ -14,8 +14,11 @@ import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
+import { useAppDispatch, useAppSelector } from '../../redux/configStore';
+import { loginApi } from '../../redux/reducers/userReducer';
+import Loading from '../../components/Loading';
 
-type FormInputs = {
+export type LoginFormInputs = {
   email: string;
   password: string;
 };
@@ -39,17 +42,22 @@ const schema = yup
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const { isLoading } = useAppSelector((state) => state.userReducer);
+  const dispatch = useAppDispatch();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormInputs>({
+  } = useForm<LoginFormInputs>({
     mode: 'onTouched',
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = (data: FormInputs) => console.log(data);
+  const onSubmit = (data: LoginFormInputs) => {
+    console.log(data);
+    dispatch(loginApi(data));
+  };
 
   const handleClickShowPassword = () => {
     setShowPassword((show) => !show);
@@ -159,6 +167,7 @@ const Login = () => {
           </Box>
         </Box>
       </Grid>
+      {isLoading && <Loading />}
     </Grid>
   );
 };

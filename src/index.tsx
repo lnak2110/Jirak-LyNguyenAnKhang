@@ -13,6 +13,8 @@ import Home from './pages/home/Home';
 import Register from './pages/register/Register';
 import Login from './pages/login/Login';
 import CssBaseline from '@mui/material/CssBaseline';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
 
 export const router = createBrowserRouter([
   {
@@ -36,6 +38,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <CssBaseline />
+    <ToastContainer />
     <RouterProvider router={router} />
   </React.StrictMode>
 );
