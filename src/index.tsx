@@ -12,6 +12,8 @@ import store from './redux/configStore';
 import Home from './pages/home/Home';
 import Register from './pages/register/Register';
 import Login from './pages/login/Login';
+import AuthTemplate from './templates/AuthTemplate';
+import HomeTemplate from './templates/HomeTemplate';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
@@ -22,9 +24,13 @@ export const router = createBrowserRouter([
     element: (
       <Provider store={store}>
         <Routes>
-          <Route index element={<Home />}></Route>
-          <Route path="/register" element={<Register />}></Route>
-          <Route path="/login" element={<Login />}></Route>
+          <Route element={<AuthTemplate />}>
+            <Route path="/register" element={<Register />}></Route>
+            <Route path="/login" element={<Login />}></Route>
+          </Route>
+          <Route element={<HomeTemplate />}>
+            <Route index element={<Home />}></Route>
+          </Route>
           <Route path="*" element={<Navigate to="/" />}></Route>
         </Routes>
       </Provider>
