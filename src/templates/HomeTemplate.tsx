@@ -8,7 +8,6 @@ const HomeTemplate = () => {
 
   useEffect(() => {
     if (!userLogin) {
-      console.log('not auth');
       navigate('/login');
     }
   }, [userLogin]);

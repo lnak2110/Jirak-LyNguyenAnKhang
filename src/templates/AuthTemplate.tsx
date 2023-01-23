@@ -8,7 +8,6 @@ const AuthTemplate = () => {
 
   useEffect(() => {
     if (userLogin) {
-      console.log('auth');
       navigate('/');
     }
   }, [userLogin]);
