@@ -8,7 +8,7 @@ const AuthTemplate = () => {
 
   useEffect(() => {
     if (userLogin) {
-      navigate('/');
+      navigate('/projects');
     }
   }, [userLogin]);
 

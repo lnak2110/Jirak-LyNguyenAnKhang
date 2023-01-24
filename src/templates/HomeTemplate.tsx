@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
+import Header from '../components/Header';
 import { useAppSelector } from '../redux/configStore';
 
 const HomeTemplate = () => {
@@ -12,7 +13,12 @@ const HomeTemplate = () => {
     }
   }, [userLogin]);
 
-  return <Outlet />;
+  return (
+    <>
+      <Header />
+      <Outlet />
+    </>
+  );
 };
 
 export default HomeTemplate;

@@ -9,11 +9,13 @@ import {
 } from 'react-router-dom';
 import { Provider } from 'react-redux/es/exports';
 import store from './redux/configStore';
-import Home from './pages/home/Home';
-import Register from './pages/register/Register';
-import Login from './pages/login/Login';
 import AuthTemplate from './templates/AuthTemplate';
 import HomeTemplate from './templates/HomeTemplate';
+import Register from './pages/register/Register';
+import Login from './pages/login/Login';
+import Projects from './pages/projects/Projects';
+import CreateProject from './pages/createProject/CreateProject';
+import Users from './pages/users/Users';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
@@ -29,9 +31,14 @@ export const router = createBrowserRouter([
             <Route path="/login" element={<Login />}></Route>
           </Route>
           <Route element={<HomeTemplate />}>
-            <Route index element={<Home />}></Route>
+            <Route path="/" element={<Navigate to="/projects" />}></Route>
+            <Route path="/projects">
+              <Route index element={<Projects />}></Route>
+              <Route path="new" element={<CreateProject />}></Route>
+            </Route>
+            <Route path="/users" element={<Users />}></Route>
           </Route>
-          <Route path="*" element={<Navigate to="/" />}></Route>
+          <Route path="*" element={<Navigate to="/projects" />}></Route>
         </Routes>
       </Provider>
     ),

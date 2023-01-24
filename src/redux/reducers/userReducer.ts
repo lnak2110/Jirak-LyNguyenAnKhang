@@ -74,7 +74,11 @@ const initialState = {
 const userReducer = createSlice({
   name: 'userReducer',
   initialState,
-  reducers: {},
+  reducers: {
+    logoutAction: (state) => {
+      state.userLogin = null;
+    },
+  },
   extraReducers: (builder) => {
     // Register
     builder.addCase(registerApi.pending, (state) => {
@@ -100,6 +104,6 @@ const userReducer = createSlice({
   },
 });
 
-export const {} = userReducer.actions;
+export const { logoutAction } = userReducer.actions;
 
 export default userReducer.reducer;
