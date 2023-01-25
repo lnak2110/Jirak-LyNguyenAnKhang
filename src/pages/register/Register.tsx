@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useAppDispatch, useAppSelector } from '../../redux/configStore';
-import { registerApi } from '../../redux/reducers/userReducer';
+import { registerAPI } from '../../redux/reducers/userReducer';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
@@ -68,7 +68,7 @@ const Register = () => {
 
   const onSubmit = (data: RegisterFormInputs) => {
     console.log(data);
-    dispatch(registerApi(data));
+    dispatch(registerAPI(data));
   };
 
   const handleClickShowPassword = () => {

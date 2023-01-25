@@ -5,6 +5,8 @@ import { LoginFormInputs } from '../../pages/login/Login';
 import { RegisterFormInputs } from '../../pages/register/Register';
 import {
   axiosAuth,
+  eraseCookie,
+  eraseStore,
   getStoreJson,
   setCookie,
   setStore,
@@ -15,7 +17,7 @@ export type UserLogin = {
   accessToken: string;
 };
 
-export const registerApi = createAsyncThunk(
+export const registerAPI = createAsyncThunk(
   'userReducer/register',
   async (registerFormInputs: RegisterFormInputs, { rejectWithValue }) => {
     try {
@@ -34,7 +36,7 @@ export const registerApi = createAsyncThunk(
   }
 );
 
-export const loginApi = createAsyncThunk(
+export const loginAPI = createAsyncThunk(
   'userReducer/login',
   async (loginFormInputs: LoginFormInputs, { rejectWithValue }) => {
     try {
@@ -45,7 +47,7 @@ export const loginApi = createAsyncThunk(
         setStore(process.env.REACT_APP_USER_LOGIN!, { email, accessToken });
         setCookie(process.env.REACT_APP_ACCESS_TOKEN!, accessToken);
 
-        router.navigate('/');
+        router.navigate('/projects');
         toast.success(
           `Log in successfully! Welcome ${result.data?.content?.name}!`
         );
@@ -77,28 +79,30 @@ const userReducer = createSlice({
   reducers: {
     logoutAction: (state) => {
       state.userLogin = null;
+      eraseStore(process.env.REACT_APP_USER_LOGIN!);
+      eraseCookie(process.env.REACT_APP_ACCESS_TOKEN!);
     },
   },
   extraReducers: (builder) => {
     // Register
-    builder.addCase(registerApi.pending, (state) => {
+    builder.addCase(registerAPI.pending, (state) => {
       state.isLoading = true;
     });
-    builder.addCase(registerApi.fulfilled, (state) => {
+    builder.addCase(registerAPI.fulfilled, (state) => {
       state.isLoading = false;
     });
-    builder.addCase(registerApi.rejected, (state) => {
+    builder.addCase(registerAPI.rejected, (state) => {
       state.isLoading = false;
     });
     // Login
-    builder.addCase(loginApi.pending, (state) => {
+    builder.addCase(loginAPI.pending, (state) => {
       state.isLoading = true;
     });
-    builder.addCase(loginApi.fulfilled, (state, action) => {
+    builder.addCase(loginAPI.fulfilled, (state, action) => {
       state.isLoading = false;
       state.userLogin = action.payload!;
     });
-    builder.addCase(loginApi.rejected, (state) => {
+    builder.addCase(loginAPI.rejected, (state) => {
       state.isLoading = false;
     });
   },

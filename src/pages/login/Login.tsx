@@ -15,7 +15,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
 import { useAppDispatch, useAppSelector } from '../../redux/configStore';
-import { loginApi } from '../../redux/reducers/userReducer';
+import { loginAPI } from '../../redux/reducers/userReducer';
 import Loading from '../../components/Loading';
 
 export type LoginFormInputs = {
@@ -56,7 +56,7 @@ const Login = () => {
 
   const onSubmit = (data: LoginFormInputs) => {
     console.log(data);
-    dispatch(loginApi(data));
+    dispatch(loginAPI(data));
   };
 
   const handleClickShowPassword = () => {

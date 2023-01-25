@@ -125,7 +125,10 @@ const Header = () => {
           </Typography>
           <Tabs
             value={location.pathname}
-            sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}
+            sx={{
+              flexGrow: 1,
+              display: { xs: 'none', md: 'flex' },
+            }}
           >
             {pages.map((page) => (
               <Tab
@@ -136,7 +139,8 @@ const Header = () => {
                 to={page.route}
                 value={page.route}
                 sx={{
-                  mr: 2,
+                  mr: 1,
+                  py: 3,
                   display: 'flex',
                   justifyContent: 'center',
                   alignItems: 'center',

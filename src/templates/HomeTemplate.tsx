@@ -11,7 +11,7 @@ const HomeTemplate = () => {
     if (!userLogin) {
       navigate('/login');
     }
-  }, [userLogin]);
+  }, [userLogin, navigate]);
 
   return (
     <>

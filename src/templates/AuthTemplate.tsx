@@ -10,7 +10,7 @@ const AuthTemplate = () => {
     if (userLogin) {
       navigate('/projects');
     }
-  }, [userLogin]);
+  }, [userLogin, navigate]);
 
   return <Outlet />;
 };
