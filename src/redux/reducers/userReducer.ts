@@ -47,7 +47,6 @@ export const loginAPI = createAsyncThunk(
         setStore(process.env.REACT_APP_USER_LOGIN!, { email, accessToken });
         setCookie(process.env.REACT_APP_ACCESS_TOKEN!, accessToken);
 
-        router.navigate('/projects');
         toast.success(
           `Log in successfully! Welcome ${result.data?.content?.name}!`
         );
@@ -101,6 +100,7 @@ const userReducer = createSlice({
     builder.addCase(loginAPI.fulfilled, (state, action) => {
       state.isLoading = false;
       state.userLogin = action.payload!;
+      router.navigate('/projects');
     });
     builder.addCase(loginAPI.rejected, (state) => {
       state.isLoading = false;
