@@ -1,40 +1,113 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { toast } from 'react-toastify';
+import { router } from '../..';
+import { LoginFormInputs } from '../../pages/login/Login';
 import { RegisterFormInputs } from '../../pages/register/Register';
-import { axiosAuth } from '../../utils/config';
+import {
+  axiosAuth,
+  eraseCookie,
+  eraseStore,
+  getStoreJson,
+  setCookie,
+  setStore,
+} from '../../utils/config';
 
-export const registerApi = createAsyncThunk(
+export type UserLogin = {
+  email: string;
+  accessToken: string;
+};
+
+export const registerAPI = createAsyncThunk(
   'userReducer/register',
-  async (registerFormInputs: RegisterFormInputs) => {
+  async (registerFormInputs: RegisterFormInputs, { rejectWithValue }) => {
     try {
       const result = await axiosAuth.post('/Users/signup', registerFormInputs);
       console.log(result);
-    } catch (error) {
-      console.log(error);
+      if (result?.status === 200) {
+        router.navigate('/login');
+        toast.success('Register successfully! Please log in to continue.');
+      }
+    } catch (error: any) {
+      if (error.response?.status === 400) {
+        toast.error('Email is already existed!');
+        return rejectWithValue('Email is already existed!');
+      }
     }
   }
 );
 
+export const loginAPI = createAsyncThunk(
+  'userReducer/login',
+  async (loginFormInputs: LoginFormInputs, { rejectWithValue }) => {
+    try {
+      const result = await axiosAuth.post('/Users/signin', loginFormInputs);
+      console.log(result);
+      if (result?.status === 200) {
+        const { email, accessToken } = result.data.content;
+        setStore(process.env.REACT_APP_USER_LOGIN!, { email, accessToken });
+        setCookie(process.env.REACT_APP_ACCESS_TOKEN!, accessToken);
+
+        toast.success(
+          `Log in successfully! Welcome ${result.data?.content?.name}!`
+        );
+        return { email, accessToken } as UserLogin;
+      }
+    } catch (error: any) {
+      console.log(error);
+      if (error.response?.status === 400) {
+        toast.error('Wrong email or password!');
+        return rejectWithValue('Wrong email or password!');
+      }
+    }
+  }
+);
+
+type InitialStateType = {
+  isLoading: boolean;
+  userLogin: UserLogin | null;
+};
+
 const initialState = {
   isLoading: false,
-};
+  userLogin: getStoreJson(process.env.REACT_APP_USER_LOGIN!) || null,
+} as InitialStateType;
 
 const userReducer = createSlice({
   name: 'userReducer',
   initialState,
-  reducers: {},
+  reducers: {
+    logoutAction: (state) => {
+      state.userLogin = null;
+      eraseStore(process.env.REACT_APP_USER_LOGIN!);
+      eraseCookie(process.env.REACT_APP_ACCESS_TOKEN!);
+    },
+  },
   extraReducers: (builder) => {
-    builder.addCase(registerApi.pending, (state) => {
+    // Register
+    builder.addCase(registerAPI.pending, (state) => {
       state.isLoading = true;
     });
-    builder.addCase(registerApi.fulfilled, (state) => {
+    builder.addCase(registerAPI.fulfilled, (state) => {
       state.isLoading = false;
     });
-    builder.addCase(registerApi.rejected, (state) => {
+    builder.addCase(registerAPI.rejected, (state) => {
+      state.isLoading = false;
+    });
+    // Login
+    builder.addCase(loginAPI.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(loginAPI.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.userLogin = action.payload!;
+      router.navigate('/projects');
+    });
+    builder.addCase(loginAPI.rejected, (state) => {
       state.isLoading = false;
     });
   },
 });
 
-export const {} = userReducer.actions;
+export const { logoutAction } = userReducer.actions;
 
 export default userReducer.reducer;

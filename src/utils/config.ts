@@ -12,8 +12,9 @@ export const {
   setStore: (name: string, value: any) => {
     if (typeof value !== 'string') {
       localStorage.setItem(name, JSON.stringify(value));
+    } else {
+      localStorage.setItem(name, value);
     }
-    localStorage.setItem(name, value);
   },
   getStore: (name: string) => {
     if (localStorage.getItem(name)) {
@@ -23,14 +24,14 @@ export const {
   },
   getStoreJson: (name: string) => {
     if (localStorage.getItem(name)) {
-      return JSON.parse(localStorage.getItem(name) as string);
+      return JSON.parse(localStorage.getItem(name)!);
     }
     return null;
   },
   eraseStore: (name: string) => {
     localStorage.removeItem(name);
   },
-  setCookie: (name: string, value: any, days: number) => {
+  setCookie: (name: string, value: any, days?: number) => {
     var expires = '';
     if (days) {
       var date = new Date();
