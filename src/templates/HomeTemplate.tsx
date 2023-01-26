@@ -1,22 +1,21 @@
-import { useEffect } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
-import Header from '../components/Header';
+import { Navigate, Outlet } from 'react-router-dom';
 import { useAppSelector } from '../redux/configStore';
+import Header from '../components/Header';
+import Container from '@mui/material/Container';
 
 const HomeTemplate = () => {
   const { userLogin } = useAppSelector((state) => state.userReducer);
-  const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!userLogin) {
-      navigate('/login');
-    }
-  }, [userLogin, navigate]);
+  if (!userLogin) {
+    return <Navigate to="/login" />;
+  }
 
   return (
     <>
       <Header />
-      <Outlet />
+      <Container maxWidth="xl" sx={{ py: 4 }}>
+        <Outlet />
+      </Container>
     </>
   );
 };

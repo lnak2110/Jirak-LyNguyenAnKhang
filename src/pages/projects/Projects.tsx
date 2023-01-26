@@ -22,6 +22,9 @@ const Projects = () => {
     {
       field: 'id',
       headerName: 'ID',
+      type: 'number',
+      headerAlign: 'left',
+      align: 'left',
       minWidth: 70,
       flex: 0.5,
     },
@@ -48,6 +51,8 @@ const Projects = () => {
       headerName: 'Members',
       minWidth: 200,
       flex: 1.5,
+      filterable: false,
+      sortable: false,
       renderCell: (params) => (
         <UsersAvatarGroup members={params.value} maxAvatarsDisplayed={3} />
       ),

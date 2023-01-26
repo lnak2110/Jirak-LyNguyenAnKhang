@@ -30,6 +30,13 @@ const Header = () => {
 
   const location = useLocation();
 
+  const activeTab = () => {
+    if (location.pathname === '/') {
+      return false;
+    }
+    return location.pathname;
+  };
+
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -124,7 +131,7 @@ const Header = () => {
             JIRAK
           </Typography>
           <Tabs
-            value={location.pathname}
+            value={activeTab()}
             sx={{
               flexGrow: 1,
               display: { xs: 'none', md: 'flex' },
