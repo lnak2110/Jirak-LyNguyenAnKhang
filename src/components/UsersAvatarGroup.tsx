@@ -4,6 +4,7 @@ import AvatarGroup from '@mui/material/AvatarGroup';
 import Tooltip from '@mui/material/Tooltip';
 import Popper from '@mui/material/Popper';
 import Stack from '@mui/material/Stack';
+import Paper from '@mui/material/Paper';
 import {
   usePopupState,
   bindPopper,
@@ -39,7 +40,6 @@ function UsersAvatarGroup({
         slotProps={{
           additionalAvatar: {
             ...bindHover(popupState),
-            sx: { cursor: 'pointer' },
           },
         }}
       >
@@ -48,7 +48,7 @@ function UsersAvatarGroup({
         ))}
       </AvatarGroup>
       <Popper {...bindPopper(popupState)} placement="top">
-        <Stack spacing={0.5}>
+        <Stack spacing={0.5} component={Paper} elevation={2} sx={{ p: 1 }}>
           {members.slice(maxAvatarsDisplayed - 1).map((member: Member) => (
             <UserAvatar key={member.userId} {...member} />
           ))}
