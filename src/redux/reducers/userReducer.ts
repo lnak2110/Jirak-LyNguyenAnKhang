@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
-import { router } from '../..';
+import { router } from '../../App';
 import { LoginFormInputs } from '../../pages/login/Login';
 import { RegisterFormInputs } from '../../pages/register/Register';
 import {
