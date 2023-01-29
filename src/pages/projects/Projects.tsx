@@ -3,7 +3,11 @@ import { useAppDispatch, useAppSelector } from '../../redux/configStore';
 import { getAllProjectsAPI } from '../../redux/reducers/projectReducer';
 import Loading from '../../components/Loading';
 import UsersAvatarGroup from '../../components/UsersAvatarGroup';
-import { DataGrid, GridColDef } from '@mui/x-data-grid/';
+import {
+  DataGrid,
+  GridColDef,
+  GridValueFormatterParams,
+} from '@mui/x-data-grid/';
 
 const Projects = () => {
   const [pageSize, setPageSize] = useState(10);
@@ -27,6 +31,9 @@ const Projects = () => {
       align: 'left',
       minWidth: 70,
       flex: 0.5,
+      valueFormatter: (params: GridValueFormatterParams<number>) => {
+        return +params.value.toString().replace(/,/g, '');
+      },
     },
     {
       field: 'projectName',
