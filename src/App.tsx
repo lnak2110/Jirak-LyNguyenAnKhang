@@ -17,6 +17,15 @@ import Users from './pages/users/Users';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+export const theme = createTheme({
+  components: {
+    MuiMenu: {
+      defaultProps: { disableScrollLock: true },
+    },
+  },
+});
 
 export const router = createBrowserRouter([
   {
@@ -45,11 +54,11 @@ export const router = createBrowserRouter([
 
 const App = () => {
   return (
-    <>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
       <ToastContainer />
       <RouterProvider router={router} />
-    </>
+    </ThemeProvider>
   );
 };
 

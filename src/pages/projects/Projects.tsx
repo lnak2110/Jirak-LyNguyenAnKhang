@@ -3,9 +3,11 @@ import { useAppDispatch, useAppSelector } from '../../redux/configStore';
 import { getAllProjectsAPI } from '../../redux/reducers/projectReducer';
 import Loading from '../../components/Loading';
 import UsersAvatarGroup from '../../components/UsersAvatarGroup';
+import { theme } from '../../App';
 import {
   DataGrid,
   GridColDef,
+  GridToolbar,
   GridValueFormatterParams,
 } from '@mui/x-data-grid/';
 
@@ -89,9 +91,23 @@ const Projects = () => {
       autoHeight
       checkboxSelection
       disableSelectionOnClick
-      rowsPerPageOptions={[10, 20]}
+      rowsPerPageOptions={[10, 20, 50, 100]}
       pageSize={pageSize}
       onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+      disableDensitySelector
+      components={{ Toolbar: GridToolbar }}
+      componentsProps={{
+        toolbar: {
+          csvOptions: { disableToolbarButton: true },
+          printOptions: { disableToolbarButton: true },
+          showQuickFilter: true,
+        },
+      }}
+      sx={{
+        '	.MuiDataGrid-columnHeaders': {
+          backgroundColor: theme.palette.grey[200],
+        },
+      }}
     />
   );
 };
