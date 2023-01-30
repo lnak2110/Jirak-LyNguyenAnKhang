@@ -57,14 +57,14 @@ const Header = () => {
   };
 
   return (
-    <AppBar position="static" color="inherit">
+    <AppBar position="sticky" color="inherit">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
             variant="h6"
             noWrap
             component={NavLink}
-            to="/projects"
+            to="/"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -117,7 +117,7 @@ const Header = () => {
             variant="h5"
             noWrap
             component={NavLink}
-            to="/projects"
+            to="/"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },

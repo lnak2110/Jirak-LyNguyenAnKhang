@@ -1,3 +1,4 @@
+import { theme } from '../App';
 import { Member } from '../redux/reducers/projectReducer';
 import Avatar from '@mui/material/Avatar';
 import AvatarGroup from '@mui/material/AvatarGroup';
@@ -5,11 +6,22 @@ import Tooltip from '@mui/material/Tooltip';
 import Popper from '@mui/material/Popper';
 import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
 import {
   usePopupState,
   bindPopper,
   bindHover,
+  bindTrigger,
+  bindDialog,
 } from 'material-ui-popup-state/hooks';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Grid,
+} from '@mui/material';
 
 type UsersAvatarGroupPropsType = {
   members: Member[];
@@ -24,14 +36,66 @@ const UserAvatar = ({ name, avatar }: Member) => {
   );
 };
 
-function UsersAvatarGroup({
+const UsersAvatarGroup = ({
   members,
   maxAvatarsDisplayed,
-}: UsersAvatarGroupPropsType) {
-  const popupState = usePopupState({
+}: UsersAvatarGroupPropsType) => {
+  const downMd = useMediaQuery(theme.breakpoints.down('md'));
+
+  const popperPopupState = usePopupState({
     variant: 'popper',
-    popupId: 'demoPopper',
+    popupId: 'viewMembersPopper',
   });
+
+  const dialogPopupState = usePopupState({
+    variant: 'dialog',
+    popupId: 'viewMembersDialog',
+  });
+
+  if (downMd) {
+    return (
+      <>
+        <AvatarGroup
+          max={maxAvatarsDisplayed}
+          slotProps={{
+            additionalAvatar: {
+              ...bindTrigger(dialogPopupState),
+              sx: {
+                cursor: 'pointer',
+              },
+            },
+          }}
+        >
+          {members.map((member: Member) => (
+            <UserAvatar key={member.userId} {...member} />
+          ))}
+        </AvatarGroup>
+        <Dialog
+          {...bindDialog(dialogPopupState)}
+          scroll="paper"
+          maxWidth="xs"
+          aria-labelledby="all-members-dialog-title"
+          aria-describedby="all-members-dialog-description"
+        >
+          <DialogTitle id="all-members-dialog-title">All members</DialogTitle>
+          <DialogContent>
+            <Grid container spacing={3}>
+              {members.map((member: Member) => (
+                <Grid item xs={3} sm={2} key={member.userId}>
+                  <UserAvatar {...member} />
+                </Grid>
+              ))}
+            </Grid>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={dialogPopupState.close} autoFocus>
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </>
+    );
+  }
 
   return (
     <>
@@ -39,7 +103,7 @@ function UsersAvatarGroup({
         max={maxAvatarsDisplayed}
         slotProps={{
           additionalAvatar: {
-            ...bindHover(popupState),
+            ...bindHover(popperPopupState),
           },
         }}
       >
@@ -47,8 +111,14 @@ function UsersAvatarGroup({
           <UserAvatar key={member.userId} {...member} />
         ))}
       </AvatarGroup>
-      <Popper {...bindPopper(popupState)} placement="top">
-        <Stack spacing={0.5} component={Paper} elevation={2} sx={{ p: 1 }}>
+      <Popper {...bindPopper(popperPopupState)}>
+        <Stack
+          direction="row"
+          spacing={0.5}
+          component={Paper}
+          elevation={2}
+          sx={{ p: 1, maxWidth: '300px', flexWrap: 'wrap', gap: 0.5 }}
+        >
           {members.slice(maxAvatarsDisplayed - 1).map((member: Member) => (
             <UserAvatar key={member.userId} {...member} />
           ))}
@@ -56,6 +126,6 @@ function UsersAvatarGroup({
       </Popper>
     </>
   );
-}
+};
 
 export default UsersAvatarGroup;
