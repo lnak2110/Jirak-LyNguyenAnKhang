@@ -48,15 +48,15 @@ const Login = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<LoginFormInputs>({
     mode: 'onTouched',
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = (data: LoginFormInputs) => {
+  const onSubmit = async (data: LoginFormInputs) => {
     console.log(data);
-    dispatch(loginAPI(data));
+    await dispatch(loginAPI(data));
   };
 
   const handleClickShowPassword = () => {
@@ -151,6 +151,7 @@ const Login = () => {
             />
             <Button
               type="submit"
+              disabled={isSubmitting}
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
