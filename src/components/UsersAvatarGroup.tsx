@@ -7,6 +7,12 @@ import Popper from '@mui/material/Popper';
 import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Grid from '@mui/material/Grid';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import {
   usePopupState,
   bindPopper,
@@ -14,14 +20,6 @@ import {
   bindTrigger,
   bindDialog,
 } from 'material-ui-popup-state/hooks';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Grid,
-} from '@mui/material';
 
 type UsersAvatarGroupPropsType = {
   members: Member[];
@@ -49,7 +47,7 @@ const UsersAvatarGroup = ({
 
   const dialogPopupState = usePopupState({
     variant: 'dialog',
-    popupId: 'viewMembersDialog',
+    popupId: 'allMembersDialog',
   });
 
   if (downMd) {
