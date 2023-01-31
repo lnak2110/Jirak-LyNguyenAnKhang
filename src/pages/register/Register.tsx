@@ -60,15 +60,15 @@ const Register = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<RegisterFormInputs>({
     mode: 'onTouched',
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = (data: RegisterFormInputs) => {
+  const onSubmit = async (data: RegisterFormInputs) => {
     console.log(data);
-    dispatch(registerAPI(data));
+    await dispatch(registerAPI(data));
   };
 
   const handleClickShowPassword = () => {
@@ -166,6 +166,7 @@ const Register = () => {
           <Button
             type="submit"
             fullWidth
+            disabled={isSubmitting}
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
