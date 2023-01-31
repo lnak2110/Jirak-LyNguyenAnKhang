@@ -64,7 +64,7 @@ const UsersAvatarGroup = ({
             },
           }}
         >
-          {members.map((member: Member) => (
+          {members?.map((member: Member) => (
             <UserAvatar key={member.userId} {...member} />
           ))}
         </AvatarGroup>
@@ -78,7 +78,7 @@ const UsersAvatarGroup = ({
           <DialogTitle id="all-members-dialog-title">All members</DialogTitle>
           <DialogContent>
             <Grid container spacing={3}>
-              {members.map((member: Member) => (
+              {members?.map((member: Member) => (
                 <Grid item xs={3} sm={2} key={member.userId}>
                   <UserAvatar {...member} />
                 </Grid>
@@ -105,7 +105,7 @@ const UsersAvatarGroup = ({
           },
         }}
       >
-        {members.map((member: Member) => (
+        {members?.map((member: Member) => (
           <UserAvatar key={member.userId} {...member} />
         ))}
       </AvatarGroup>
@@ -117,7 +117,7 @@ const UsersAvatarGroup = ({
           elevation={2}
           sx={{ p: 1, maxWidth: '300px', flexWrap: 'wrap', gap: 0.5 }}
         >
-          {members.slice(maxAvatarsDisplayed - 1).map((member: Member) => (
+          {members?.slice(maxAvatarsDisplayed - 1)?.map((member: Member) => (
             <UserAvatar key={member.userId} {...member} />
           ))}
         </Stack>
