@@ -68,7 +68,7 @@ const Projects = () => {
     },
   ];
 
-  const rows = projects.map((project) => {
+  const rows = projects?.map((project) => {
     const { id, projectName, categoryName, creator, members } = project;
 
     return {
@@ -86,7 +86,7 @@ const Projects = () => {
 
   return (
     <DataGrid
-      rows={rows}
+      rows={rows ?? []}
       columns={columns}
       autoHeight
       checkboxSelection

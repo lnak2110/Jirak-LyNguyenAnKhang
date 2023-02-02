@@ -1,8 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
 import { router } from '../../App';
-import { LoginFormInputs } from '../../pages/login/Login';
-import { RegisterFormInputs } from '../../pages/register/Register';
 import {
   axiosAuth,
   eraseCookie,
@@ -11,6 +9,18 @@ import {
   setCookie,
   setStore,
 } from '../../utils/config';
+
+export type LoginFormInputs = {
+  email: string;
+  password: string;
+};
+
+export type RegisterFormInputs = {
+  name: string;
+  phoneNumber: string;
+  email: string;
+  password: string;
+};
 
 export type UserLogin = {
   email: string;

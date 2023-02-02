@@ -57,7 +57,7 @@ const Header = () => {
   };
 
   return (
-    <AppBar position="sticky" color="inherit">
+    <AppBar position="sticky" color="inherit" elevation={2}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
