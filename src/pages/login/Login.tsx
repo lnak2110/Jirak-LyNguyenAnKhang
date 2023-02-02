@@ -15,13 +15,8 @@ import InputAdornment from '@mui/material/InputAdornment';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
 import { useAppDispatch, useAppSelector } from '../../redux/configStore';
-import { loginAPI } from '../../redux/reducers/userReducer';
+import { loginAPI, LoginFormInputs } from '../../redux/reducers/userReducer';
 import Loading from '../../components/Loading';
-
-export type LoginFormInputs = {
-  email: string;
-  password: string;
-};
 
 const schema = yup
   .object()

@@ -4,7 +4,10 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useAppDispatch, useAppSelector } from '../../redux/configStore';
-import { registerAPI } from '../../redux/reducers/userReducer';
+import {
+  registerAPI,
+  RegisterFormInputs,
+} from '../../redux/reducers/userReducer';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
@@ -18,13 +21,6 @@ import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Loading from '../../components/Loading';
-
-export type RegisterFormInputs = {
-  name: string;
-  phoneNumber: string;
-  email: string;
-  password: string;
-};
 
 const schema = yup
   .object()
