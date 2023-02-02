@@ -1,18 +1,24 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { axiosAuth } from '../../utils/config';
 
+type Creator = {
+  id: number;
+  name: string;
+};
+
 export type Member = {
   userId: number;
   name: string;
   avatar: string;
 };
 
-type Creator = {
-  id: number;
-  name: string;
+export type CreateProjectFormInputs = {
+  projectName: string;
+  categoryId: number;
+  description: string;
 };
 
-type ProjectsType = {
+type ProjectDetailType = {
   members: Member[];
   creator: Creator;
   id: number;
@@ -24,13 +30,33 @@ type ProjectsType = {
   deleted: boolean;
 };
 
+type ProjectCategoryType = {
+  id: number;
+  projectCategoryName: string;
+};
+
 export const getAllProjectsAPI = createAsyncThunk(
-  'projectReducer/getAllProjects',
+  'projectReducer/getAllProjectsAPI',
   async () => {
     try {
       const result = await axiosAuth.get('/Project/getAllProject');
       if (result?.status === 200) {
-        return result.data.content as ProjectsType[];
+        return result.data.content as ProjectDetailType[];
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
+export const getProjectCategoriesAPI = createAsyncThunk(
+  'projectReducer/getProjectCategoriesAPI',
+  async () => {
+    try {
+      const result = await axiosAuth.get('/ProjectCategory');
+
+      if (result?.status === 200) {
+        return result.data.content as ProjectCategoryType[];
       }
     } catch (error) {
       console.log(error);
@@ -40,12 +66,14 @@ export const getAllProjectsAPI = createAsyncThunk(
 
 type InitialStateType = {
   isLoading: boolean;
-  projects: ProjectsType[];
+  projects: ProjectDetailType[];
+  projectCategories: ProjectCategoryType[];
 };
 
 const initialState: InitialStateType = {
   isLoading: false,
   projects: [],
+  projectCategories: [],
 };
 
 const projectReducer = createSlice({
@@ -53,6 +81,7 @@ const projectReducer = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    // getAllProjectsAPI
     builder.addCase(getAllProjectsAPI.pending, (state) => {
       state.isLoading = true;
     });
@@ -61,6 +90,17 @@ const projectReducer = createSlice({
       state.projects = payload!;
     });
     builder.addCase(getAllProjectsAPI.rejected, (state) => {
+      state.isLoading = false;
+    });
+    // getProjectCategoriesAPI
+    builder.addCase(getProjectCategoriesAPI.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(getProjectCategoriesAPI.fulfilled, (state, { payload }) => {
+      state.isLoading = false;
+      state.projectCategories = payload!;
+    });
+    builder.addCase(getProjectCategoriesAPI.rejected, (state) => {
       state.isLoading = false;
     });
   },
