@@ -1,10 +1,10 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAppSelector } from '../redux/configStore';
+import { RootState, useAppSelector } from '../redux/configStore';
 import Header from '../components/Header';
 import Container from '@mui/material/Container';
 
 const HomeTemplate = () => {
-  const { userLogin } = useAppSelector((state) => state.userReducer);
+  const { userLogin } = useAppSelector((state: RootState) => state.userReducer);
 
   if (!userLogin) {
     return <Navigate to="/login" />;

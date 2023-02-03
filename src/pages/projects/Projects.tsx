@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../../redux/configStore';
+import {
+  RootState,
+  useAppDispatch,
+  useAppSelector,
+} from '../../redux/configStore';
 import { getAllProjectsAPI } from '../../redux/reducers/projectReducer';
 import Loading from '../../components/Loading';
 import UsersAvatarGroup from '../../components/UsersAvatarGroup';
@@ -15,7 +19,7 @@ const Projects = () => {
   const [pageSize, setPageSize] = useState(10);
 
   const { projects, isLoading } = useAppSelector(
-    (state) => state.projectReducer
+    (state: RootState) => state.projectReducer
   );
 
   const dispatch = useAppDispatch();
