@@ -70,11 +70,11 @@ type InitialStateType = {
   projectCategories: ProjectCategoryType[];
 };
 
-const initialState: InitialStateType = {
+const initialState = {
   isLoading: false,
   projects: [],
   projectCategories: [],
-};
+} as InitialStateType;
 
 const projectReducer = createSlice({
   name: 'projectReducer',

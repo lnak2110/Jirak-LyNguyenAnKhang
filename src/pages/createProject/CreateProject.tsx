@@ -1,28 +1,34 @@
-import {
-  Autocomplete,
-  Button,
-  Grid,
-  TextField,
-  useMediaQuery,
-} from '@mui/material';
 import { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../../redux/configStore';
+import { useForm, Controller } from 'react-hook-form';
+import {
+  RootState,
+  useAppDispatch,
+  useAppSelector,
+} from '../../redux/configStore';
 import {
   CreateProjectFormInputs,
   getProjectCategoriesAPI,
 } from '../../redux/reducers/projectReducer';
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
-import { useForm, Controller } from 'react-hook-form';
 import { theme } from '../../App';
+import Editor from '../../components/Editor';
+import Autocomplete from '@mui/material/Autocomplete';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const CreateProject = () => {
-  const { projectCategories } = useAppSelector((state) => state.projectReducer);
+  const { projectCategories } = useAppSelector(
+    (state: RootState) => state.projectReducer
+  );
   const dispatch = useAppDispatch();
 
   const downSm = useMediaQuery(theme.breakpoints.down('sm'));
+  const up320 = useMediaQuery(theme.breakpoints.up(320));
 
   useEffect(() => {
     dispatch(getProjectCategoriesAPI());
@@ -81,6 +87,34 @@ const CreateProject = () => {
                         required
                       />
                     )}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid
+              item
+              xs={12}
+              sx={{
+                '.ql-editor': {
+                  fontSize: up320 ? theme.typography.body1 : undefined,
+                },
+              }}
+            >
+              <Typography
+                component="label"
+                htmlFor="description"
+                sx={{ display: 'block', mb: 1 }}
+              >
+                Project Description
+              </Typography>
+              <Controller
+                name="description"
+                control={control}
+                render={({ field: { ref, ...field } }) => (
+                  <Editor
+                    {...field}
+                    id="description"
+                    placeholder="Describe the project..."
                   />
                 )}
               />

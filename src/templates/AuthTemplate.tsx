@@ -1,8 +1,8 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAppSelector } from '../redux/configStore';
+import { RootState, useAppSelector } from '../redux/configStore';
 
 const AuthTemplate = () => {
-  const { userLogin } = useAppSelector((state) => state.userReducer);
+  const { userLogin } = useAppSelector((state: RootState) => state.userReducer);
 
   if (userLogin) {
     return <Navigate to="/projects" />;

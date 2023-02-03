@@ -3,6 +3,13 @@ import { NavLink } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import {
+  RootState,
+  useAppDispatch,
+  useAppSelector,
+} from '../../redux/configStore';
+import { loginAPI, LoginFormInputs } from '../../redux/reducers/userReducer';
+import Loading from '../../components/Loading';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
@@ -14,9 +21,6 @@ import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
-import { useAppDispatch, useAppSelector } from '../../redux/configStore';
-import { loginAPI, LoginFormInputs } from '../../redux/reducers/userReducer';
-import Loading from '../../components/Loading';
 
 const schema = yup
   .object()
@@ -37,7 +41,7 @@ const schema = yup
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const { isLoading } = useAppSelector((state) => state.userReducer);
+  const { isLoading } = useAppSelector((state: RootState) => state.userReducer);
   const dispatch = useAppDispatch();
 
   const {

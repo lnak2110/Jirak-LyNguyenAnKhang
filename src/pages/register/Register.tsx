@@ -3,7 +3,11 @@ import { NavLink } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { useAppDispatch, useAppSelector } from '../../redux/configStore';
+import {
+  RootState,
+  useAppDispatch,
+  useAppSelector,
+} from '../../redux/configStore';
 import {
   registerAPI,
   RegisterFormInputs,
@@ -50,7 +54,7 @@ const schema = yup
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const { isLoading } = useAppSelector((state) => state.userReducer);
+  const { isLoading } = useAppSelector((state: RootState) => state.userReducer);
   const dispatch = useAppDispatch();
 
   const {
