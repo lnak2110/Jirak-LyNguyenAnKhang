@@ -26,7 +26,7 @@ type UsersAvatarGroupPropsType = {
   maxAvatarsDisplayed: number;
 };
 
-const UserAvatar = ({ name, avatar }: Member) => {
+export const UserAvatar = ({ name, avatar }: Member) => {
   return (
     <Tooltip title={name}>
       <Avatar alt={name} src={avatar} />

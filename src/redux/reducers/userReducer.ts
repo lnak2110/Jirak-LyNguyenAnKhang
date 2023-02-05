@@ -27,6 +27,14 @@ export type UserLogin = {
   accessToken: string;
 };
 
+type UserDetailType = {
+  userId: number;
+  name: string;
+  avatar: string;
+  email: string;
+  phoneNumber: string;
+};
+
 export const registerAPI = createAsyncThunk(
   'userReducer/register',
   async (registerFormInputs: RegisterFormInputs, { rejectWithValue }) => {
@@ -72,14 +80,30 @@ export const loginAPI = createAsyncThunk(
   }
 );
 
+export const getAllUsersAPI = createAsyncThunk(
+  'userReducer/getAllUsersAPI',
+  async () => {
+    try {
+      const result = await axiosAuth.get('/Users/getUser');
+      if (result?.status === 200) {
+        return result.data.content as UserDetailType[];
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
 type InitialStateType = {
   isLoading: boolean;
   userLogin: UserLogin | null;
+  users: UserDetailType[];
 };
 
 const initialState = {
   isLoading: false,
   userLogin: getStoreJson(process.env.REACT_APP_USER_LOGIN!) || null,
+  users: [],
 } as InitialStateType;
 
 const userReducer = createSlice({
@@ -113,6 +137,17 @@ const userReducer = createSlice({
       router.navigate('/projects');
     });
     builder.addCase(loginAPI.rejected, (state) => {
+      state.isLoading = false;
+    });
+    // getAllUsersAPI
+    builder.addCase(getAllUsersAPI.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(getAllUsersAPI.fulfilled, (state, { payload }) => {
+      state.isLoading = false;
+      state.users = payload!;
+    });
+    builder.addCase(getAllUsersAPI.rejected, (state) => {
       state.isLoading = false;
     });
   },
