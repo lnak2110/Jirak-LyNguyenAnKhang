@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { toast } from 'react-toastify';
 import { axiosAuth } from '../../utils/config';
 
 type Creator = {
@@ -7,14 +8,14 @@ type Creator = {
 };
 
 export type Member = {
-  userId: number;
+  userId?: number;
   name: string;
   avatar: string;
 };
 
 export type CreateProjectFormInputs = {
   projectName: string;
-  categoryId: number;
+  categoryId: ProjectCategoryType | null;
   description: string;
 };
 
@@ -64,22 +65,60 @@ export const getProjectCategoriesAPI = createAsyncThunk(
   }
 );
 
+export const createProjectAPI = createAsyncThunk(
+  'projectReducer/createProjectAPI',
+  async (
+    createProjectFormInputs: CreateProjectFormInputs,
+    { rejectWithValue }
+  ) => {
+    try {
+      // Change structure of the data to be sent
+      const { categoryId, ...restFields } = createProjectFormInputs;
+      const createProjectData = {
+        ...restFields,
+        categoryId: categoryId?.id,
+      };
+      const result = await axiosAuth.post(
+        '/Project/createProjectAuthorize',
+        createProjectData
+      );
+
+      console.log(result);
+      if (result?.status === 200) {
+        toast.success('Create a project successfully!');
+      }
+    } catch (error: any) {
+      console.log(error);
+      if (error.response?.status === 500) {
+        toast.error('Project name is already existed!');
+        return rejectWithValue('Project name is already existed!');
+      }
+    }
+  }
+);
+
 type InitialStateType = {
   isLoading: boolean;
   projects: ProjectDetailType[];
   projectCategories: ProjectCategoryType[];
+  projectFulfilled: boolean;
 };
 
 const initialState = {
   isLoading: false,
   projects: [],
   projectCategories: [],
+  projectFulfilled: false,
 } as InitialStateType;
 
 const projectReducer = createSlice({
   name: 'projectReducer',
   initialState,
-  reducers: {},
+  reducers: {
+    setFalseProjectFulfilledAction: (state) => {
+      state.projectFulfilled = false;
+    },
+  },
   extraReducers: (builder) => {
     // getAllProjectsAPI
     builder.addCase(getAllProjectsAPI.pending, (state) => {
@@ -103,9 +142,20 @@ const projectReducer = createSlice({
     builder.addCase(getProjectCategoriesAPI.rejected, (state) => {
       state.isLoading = false;
     });
+    // createProjectAPI
+    builder.addCase(createProjectAPI.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(createProjectAPI.fulfilled, (state) => {
+      state.isLoading = false;
+      state.projectFulfilled = true;
+    });
+    builder.addCase(createProjectAPI.rejected, (state) => {
+      state.isLoading = false;
+    });
   },
 });
 
-export const {} = projectReducer.actions;
+export const { setFalseProjectFulfilledAction } = projectReducer.actions;
 
 export default projectReducer.reducer;

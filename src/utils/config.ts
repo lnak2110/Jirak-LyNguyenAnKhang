@@ -67,8 +67,11 @@ axiosAuth.interceptors.request.use(
     //   ['Authorization']: `Bearer ${process.env.REACT_APP_ACCESS_TOKEN}`,
     //   ['TokenCybersoft']: process.env.REACT_APP_TOKEN_CYBERSOFT,
     // };
+
+    const token = getCookie(process.env.REACT_APP_ACCESS_TOKEN!);
+
     (config.headers as AxiosHeaders)
-      .set('Authorization', `Bearer ${process.env.REACT_APP_ACCESS_TOKEN}`)
+      .set('Authorization', `Bearer ${token}`)
       .set('TokenCybersoft', process.env.REACT_APP_TOKEN_CYBERSOFT);
     // config.headers['Content-Type'] = 'application/json';
     return config;
