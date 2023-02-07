@@ -1,7 +1,13 @@
 import { useState } from 'react';
 import { Member } from '../redux/reducers/projectReducer';
 import { theme } from '../App';
-import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridColDef,
+  GridMoreVertIcon,
+  GridToolbar,
+} from '@mui/x-data-grid';
+import Tooltip from '@mui/material/Tooltip';
 
 type ProjectsRowsType = {
   id: number;
@@ -26,6 +32,14 @@ type MUIDataGridProps = {
   rowId?: string;
 };
 
+const MoreActionsIconTip = () => {
+  return (
+    <Tooltip title="More actions" placement="left">
+      <GridMoreVertIcon />
+    </Tooltip>
+  );
+};
+
 const MUIDataGrid = ({
   columns,
   rows,
@@ -48,7 +62,7 @@ const MUIDataGrid = ({
         setPageSize(newPageSizeNumber)
       }
       disableDensitySelector
-      components={{ Toolbar: GridToolbar }}
+      components={{ Toolbar: GridToolbar, MoreActionsIcon: MoreActionsIconTip }}
       componentsProps={{
         toolbar: {
           csvOptions: { disableToolbarButton: true },

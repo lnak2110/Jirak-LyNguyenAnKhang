@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { matchPath, NavLink, useLocation } from 'react-router-dom';
 import { useAppDispatch } from '../redux/configStore';
 import { logoutAction } from '../redux/reducers/userReducer';
 import AppBar from '@mui/material/AppBar';
@@ -18,7 +18,7 @@ import Tab from '@mui/material/Tab';
 
 const pages = [
   { name: 'Projects', route: '/projects' },
-  { name: 'Create Project', route: '/projects/new' },
+  { name: 'Create Project', route: '/projects/create' },
   { name: 'Users', route: '/users' },
 ];
 
@@ -31,10 +31,18 @@ const Header = () => {
   const location = useLocation();
 
   const activeTab = () => {
-    if (location.pathname === '/') {
+    const { pathname } = location;
+    const projectEditPath = matchPath('/projects/:projectId/edit', pathname);
+    const projectPath = matchPath('/projects/:projectId', pathname);
+    const pagesPath = pages.find((p) => p.route === pathname);
+
+    if (pathname === '/') {
       return false;
+    } else if (pagesPath) {
+      return pathname;
+    } else if (projectPath || projectEditPath) {
+      return '/projects';
     }
-    return location.pathname;
   };
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -140,7 +148,6 @@ const Header = () => {
             {pages.map((page) => (
               <Tab
                 key={page.name}
-                onClick={handleCloseNavMenu}
                 label={page.name}
                 component={NavLink}
                 to={page.route}

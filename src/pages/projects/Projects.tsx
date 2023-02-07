@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   RootState,
   useAppDispatch,
@@ -8,7 +9,13 @@ import { getAllProjectsAPI } from '../../redux/reducers/projectReducer';
 import Loading from '../../components/Loading';
 import UsersAvatarGroup from '../../components/UsersAvatarGroup';
 import MUIDataGrid from '../../components/MUIDataGrid';
-import { GridColDef, GridValueFormatterParams } from '@mui/x-data-grid/';
+import {
+  GridActionsCellItem,
+  GridColumns,
+  GridValueFormatterParams,
+} from '@mui/x-data-grid/';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
 const Projects = () => {
   const { projects, isLoading } = useAppSelector(
@@ -17,11 +24,13 @@ const Projects = () => {
 
   const dispatch = useAppDispatch();
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     dispatch(getAllProjectsAPI());
   }, [dispatch]);
 
-  const columns: GridColDef[] = [
+  const columns: GridColumns = [
     {
       field: 'id',
       headerName: 'ID',
@@ -55,13 +64,30 @@ const Projects = () => {
     {
       field: 'members',
       headerName: 'Members',
-      minWidth: 200,
-      flex: 1.5,
+      minWidth: 150,
+      flex: 1,
       filterable: false,
       sortable: false,
       renderCell: (params) => (
         <UsersAvatarGroup members={params.value} maxAvatarsDisplayed={3} />
       ),
+    },
+    {
+      field: 'actions',
+      type: 'actions',
+      headerName: 'Actions',
+      description: 'Edit / Delete Project',
+      minWidth: 70,
+      flex: 0.5,
+      getActions: (params) => [
+        <GridActionsCellItem
+          icon={<EditIcon />}
+          label="Edit"
+          showInMenu
+          onClick={() => navigate(`/projects/${params.row.id}/edit`)}
+        />,
+        <GridActionsCellItem icon={<DeleteIcon />} label="Delete" showInMenu />,
+      ],
     },
   ];
 
