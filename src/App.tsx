@@ -14,7 +14,7 @@ import Login from './pages/login/Login';
 import Projects from './pages/projects/Projects';
 import CreateProject from './pages/createProject/CreateProject';
 import Users from './pages/users/Users';
-import EditProject from './pages/EditProject';
+import EditProject from './pages/editProject/EditProject';
 import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { ToastContainer } from 'react-toastify';

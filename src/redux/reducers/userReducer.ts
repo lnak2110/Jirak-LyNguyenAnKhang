@@ -2,6 +2,12 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
 import { router } from '../../App';
 import {
+  LoginFormInputs,
+  RegisterFormInputs,
+  UserDetailType,
+  UserLogin,
+} from '../../types/userTypes';
+import {
   axiosAuth,
   eraseCookie,
   eraseStore,
@@ -9,31 +15,6 @@ import {
   setCookie,
   setStore,
 } from '../../utils/config';
-
-export type LoginFormInputs = {
-  email: string;
-  password: string;
-};
-
-export type RegisterFormInputs = {
-  name: string;
-  phoneNumber: string;
-  email: string;
-  password: string;
-};
-
-export type UserLogin = {
-  email: string;
-  accessToken: string;
-};
-
-type UserDetailType = {
-  userId: number;
-  name: string;
-  avatar: string;
-  email: string;
-  phoneNumber: string;
-};
 
 export const registerAPI = createAsyncThunk(
   'userReducer/register',

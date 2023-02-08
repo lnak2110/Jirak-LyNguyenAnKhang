@@ -1,5 +1,5 @@
 import { theme } from '../App';
-import { Member } from '../redux/reducers/projectReducer';
+import { Member } from '../types/productTypes';
 import Avatar from '@mui/material/Avatar';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Tooltip from '@mui/material/Tooltip';
