@@ -8,7 +8,7 @@ import {
   useAppDispatch,
   useAppSelector,
 } from '../../redux/configStore';
-import { loginAPI, LoginFormInputs } from '../../redux/reducers/userReducer';
+import { loginAPI } from '../../redux/reducers/userReducer';
 import Loading from '../../components/Loading';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -21,6 +21,7 @@ import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
+import { LoginFormInputs } from '../../types/userTypes';
 
 const schema = yup
   .object()

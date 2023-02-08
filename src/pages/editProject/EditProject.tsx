@@ -1,10 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
+import { useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import {
-  CreateProjectFormInputs,
-  ProjectCategoryType,
+  EditProjectCategoryType,
+  EditProjectFormInputs,
 } from '../../types/productTypes';
 import {
   RootState,
@@ -12,20 +13,22 @@ import {
   useAppSelector,
 } from '../../redux/configStore';
 import {
-  createProjectAPI,
   getProjectCategoriesAPI,
-  setFalseProjectFulfilledAction,
+  getProjectDetailAPI,
+  updateProjectAPI,
 } from '../../redux/reducers/projectReducer';
+import ProjectForm from '../../components/ProjectForm';
 import ControllerAutocomplete from '../../components/ControllerAutocomplete';
 import ControllerEditor from '../../components/ControllerEditor';
 import ControllerTextField from '../../components/ControllerTextField';
-import ProjectForm from '../../components/ProjectForm';
 
-const CreateProject = () => {
-  const { projectCategories, projectFulfilled } = useAppSelector(
+const EditProject = () => {
+  const { projectCategories, projectDetailWithTasks } = useAppSelector(
     (state: RootState) => state.projectReducer
   );
   const dispatch = useAppDispatch();
+
+  const { projectId } = useParams();
 
   useEffect(() => {
     dispatch(getProjectCategoriesAPI());
@@ -34,6 +37,10 @@ const CreateProject = () => {
   const schema = yup
     .object()
     .shape({
+      id: yup
+        .number()
+        .required('Project ID cannot be blank!')
+        .typeError('Project ID must be a number'),
       projectName: yup
         .string()
         .trim()
@@ -55,36 +62,63 @@ const CreateProject = () => {
     })
     .required();
 
+  const initialValues = useMemo(
+    () => ({
+      id: projectDetailWithTasks?.id || 0,
+      projectName: projectDetailWithTasks?.projectName || '',
+      category: projectDetailWithTasks?.projectCategory || null,
+      description: projectDetailWithTasks?.description || '',
+    }),
+    [projectDetailWithTasks]
+  );
+
   const {
     control,
     handleSubmit,
     reset,
+    resetField,
+    watch,
     formState: { isSubmitting },
-  } = useForm<CreateProjectFormInputs, ProjectCategoryType>({
-    defaultValues: {
-      projectName: '',
-      category: null,
-      description: '',
-    },
+  } = useForm<EditProjectFormInputs, EditProjectCategoryType>({
+    defaultValues: initialValues,
     mode: 'onTouched',
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = async (data: CreateProjectFormInputs) => {
-    await dispatch(createProjectAPI(data));
-  };
+  const watchId = watch('id', initialValues.id);
 
   useEffect(() => {
-    if (projectFulfilled) {
-      reset();
-      dispatch(setFalseProjectFulfilledAction());
+    dispatch(getProjectDetailAPI(projectId!));
+  }, [dispatch, projectId]);
+
+  useEffect(() => {
+    if (projectDetailWithTasks) {
+      reset({ ...initialValues });
     }
-  }, [projectFulfilled, reset, dispatch]);
+  }, [reset, projectDetailWithTasks, initialValues]);
+
+  // Prevent user edit id
+  useEffect(() => {
+    if (watchId) {
+      resetField('id');
+    }
+  }, [watchId, initialValues.id, resetField]);
+
+  const onSubmit = async (data: EditProjectFormInputs) => {
+    await dispatch(updateProjectAPI(data));
+  };
+
+  // Edit fields name to be suitable with data sent by EditProject form
+  const optionsCategory = projectCategories.map((category) => ({
+    id: category.id,
+    name: category.projectCategoryName,
+  }));
 
   return (
     <ProjectForm
       handleSubmit={handleSubmit}
       onSubmit={onSubmit}
+      formType="edit"
       isSubmitting={isSubmitting}
       reset={reset}
       formFieldElements={[
@@ -98,8 +132,8 @@ const CreateProject = () => {
           name="category"
           label="Project Category"
           placeholder="Choose a category for your project..."
-          options={projectCategories}
-          optionLabel="projectCategoryName"
+          options={optionsCategory}
+          optionLabel="name"
           equalField="id"
         />,
         <ControllerEditor
@@ -107,9 +141,16 @@ const CreateProject = () => {
           name="description"
           placeholder="Describe the project..."
         />,
+        <ControllerTextField
+          control={control}
+          name="id"
+          label="Project ID (read only)"
+          type="number"
+          readonly
+        />,
       ]}
     />
   );
 };
 
-export default CreateProject;
+export default EditProject;

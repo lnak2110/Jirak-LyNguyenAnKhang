@@ -14,10 +14,11 @@ import Login from './pages/login/Login';
 import Projects from './pages/projects/Projects';
 import CreateProject from './pages/createProject/CreateProject';
 import Users from './pages/users/Users';
+import EditProject from './pages/editProject/EditProject';
 import CssBaseline from '@mui/material/CssBaseline';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 export const theme = createTheme({
   components: {
@@ -41,7 +42,8 @@ export const router = createBrowserRouter([
             <Route path="/" element={<Navigate to="/projects" />}></Route>
             <Route path="/projects">
               <Route index element={<Projects />}></Route>
-              <Route path="new" element={<CreateProject />}></Route>
+              <Route path="create" element={<CreateProject />}></Route>
+              <Route path=":projectId/edit" element={<EditProject />}></Route>
             </Route>
             <Route path="/users" element={<Users />}></Route>
           </Route>
