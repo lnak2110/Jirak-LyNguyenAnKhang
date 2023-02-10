@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import {
   RootState,
   useAppDispatch,
@@ -16,6 +16,7 @@ import {
 } from '@mui/x-data-grid/';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import Link from '@mui/material/Link';
 
 const Projects = () => {
   const { projects, isLoading } = useAppSelector(
@@ -48,6 +49,15 @@ const Projects = () => {
       headerName: 'Project Name',
       minWidth: 150,
       flex: 1,
+      renderCell: (params) => (
+        <Link
+          component={NavLink}
+          to={`/projects/${params.row.id}/board`}
+          underline="hover"
+        >
+          {params.value}
+        </Link>
+      ),
     },
     {
       field: 'categoryName',

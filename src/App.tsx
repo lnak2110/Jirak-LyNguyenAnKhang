@@ -9,12 +9,13 @@ import { Provider } from 'react-redux/es/exports';
 import store from './redux/configStore';
 import AuthTemplate from './templates/AuthTemplate';
 import HomeTemplate from './templates/HomeTemplate';
-import Register from './pages/register/Register';
-import Login from './pages/login/Login';
-import Projects from './pages/projects/Projects';
 import CreateProject from './pages/createProject/CreateProject';
-import Users from './pages/users/Users';
 import EditProject from './pages/editProject/EditProject';
+import Login from './pages/login/Login';
+import ProjectBoard from './pages/projectBoard/ProjectBoard';
+import Projects from './pages/projects/Projects';
+import Register from './pages/register/Register';
+import Users from './pages/users/Users';
 import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { ToastContainer } from 'react-toastify';
@@ -44,6 +45,7 @@ export const router = createBrowserRouter([
               <Route index element={<Projects />}></Route>
               <Route path="create" element={<CreateProject />}></Route>
               <Route path=":projectId/edit" element={<EditProject />}></Route>
+              <Route path=":projectId/board" element={<ProjectBoard />}></Route>
             </Route>
             <Route path="/users" element={<Users />}></Route>
           </Route>
