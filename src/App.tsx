@@ -18,6 +18,7 @@ import Register from './pages/register/Register';
 import Users from './pages/users/Users';
 import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { ConfirmProvider } from 'material-ui-confirm';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 
@@ -61,7 +62,9 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <ToastContainer />
-      <RouterProvider router={router} />
+      <ConfirmProvider>
+        <RouterProvider router={router} />
+      </ConfirmProvider>
     </ThemeProvider>
   );
 };

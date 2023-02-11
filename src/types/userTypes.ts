@@ -15,6 +15,11 @@ export type UserLogin = {
   accessToken: string;
 };
 
+export type UserAndProjectType = {
+  userId: number;
+  projectId: number;
+};
+
 export type UserDetailType = {
   userId: number;
   name: string;
