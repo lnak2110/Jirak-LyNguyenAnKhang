@@ -32,15 +32,15 @@ const Header = () => {
 
   const activeTab = () => {
     const { pathname } = location;
+    const projectBoardPath = matchPath('/projects/:projectId/board', pathname);
     const projectEditPath = matchPath('/projects/:projectId/edit', pathname);
-    const projectPath = matchPath('/projects/:projectId', pathname);
     const pagesPath = pages.find((p) => p.route === pathname);
 
     if (pathname === '/') {
       return false;
     } else if (pagesPath) {
       return pathname;
-    } else if (projectPath || projectEditPath) {
+    } else if (projectBoardPath || projectEditPath) {
       return '/projects';
     }
   };

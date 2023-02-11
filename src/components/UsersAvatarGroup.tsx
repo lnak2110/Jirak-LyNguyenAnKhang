@@ -70,7 +70,6 @@ const UsersAvatarGroup = ({
         </AvatarGroup>
         <Dialog
           {...bindDialog(dialogPopupState)}
-          scroll="paper"
           maxWidth="xs"
           aria-labelledby="all-members-dialog-title"
           aria-describedby="all-members-dialog-description"

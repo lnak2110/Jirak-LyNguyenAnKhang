@@ -1,9 +1,10 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, isAnyOf } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
 import { router } from '../../App';
 import {
   LoginFormInputs,
   RegisterFormInputs,
+  UserAndProjectType,
   UserDetailType,
   UserLogin,
 } from '../../types/userTypes';
@@ -15,6 +16,7 @@ import {
   setCookie,
   setStore,
 } from '../../utils/config';
+import { getProjectDetailAPI } from './projectReducer';
 
 export const registerAPI = createAsyncThunk(
   'userReducer/register',
@@ -75,6 +77,61 @@ export const getAllUsersAPI = createAsyncThunk(
   }
 );
 
+export const addUserToProjectAPI = createAsyncThunk(
+  'userReducer/addUserToProjectAPI',
+  async (userAndProjectData: UserAndProjectType, thunkAPI) => {
+    try {
+      const result = await axiosAuth.post(
+        '/Project/assignUserProject',
+        userAndProjectData
+      );
+      console.log(result);
+
+      if (result?.status === 200) {
+        // Refresh users list in the project
+        thunkAPI.dispatch(
+          getProjectDetailAPI(userAndProjectData.projectId.toString())
+        );
+        toast.success('Add user to this project successfully!');
+      }
+    } catch (error: any) {
+      console.log(error);
+      if (error.response?.status === 403) {
+        toast.error('You are not the creator of this project!');
+      } else {
+        toast.error('Something wrong happened!');
+      }
+    }
+  }
+);
+
+export const deleteUserFromProjectAPI = createAsyncThunk(
+  'userReducer/deleteUserFromProjectAPI',
+  async (userAndProjectData: UserAndProjectType, thunkAPI) => {
+    try {
+      const result = await axiosAuth.post(
+        '/Project/removeUserFromProject',
+        userAndProjectData
+      );
+
+      if (result?.status === 200) {
+        // Refresh users list in the project
+        thunkAPI.dispatch(
+          getProjectDetailAPI(userAndProjectData.projectId.toString())
+        );
+        toast.success('Delete user from this project successfully!');
+      }
+    } catch (error: any) {
+      console.log(error);
+      if (error.response?.status === 403) {
+        toast.error('You are not the creator of this project!');
+      } else {
+        toast.error('Something wrong happened!');
+      }
+    }
+  }
+);
+
 type InitialStateType = {
   isLoading: boolean;
   userLogin: UserLogin | null;
@@ -131,6 +188,28 @@ const userReducer = createSlice({
     builder.addCase(getAllUsersAPI.rejected, (state) => {
       state.isLoading = false;
     });
+    // addUserToProjectAPI, deleteUserFromProjectAPI
+    builder.addMatcher(
+      isAnyOf(addUserToProjectAPI.pending, deleteUserFromProjectAPI.pending),
+      (state) => {
+        state.isLoading = true;
+      }
+    );
+    builder.addMatcher(
+      isAnyOf(
+        addUserToProjectAPI.fulfilled,
+        deleteUserFromProjectAPI.fulfilled
+      ),
+      (state) => {
+        state.isLoading = false;
+      }
+    );
+    builder.addMatcher(
+      isAnyOf(addUserToProjectAPI.rejected, deleteUserFromProjectAPI.rejected),
+      (state) => {
+        state.isLoading = false;
+      }
+    );
   },
 });
 
