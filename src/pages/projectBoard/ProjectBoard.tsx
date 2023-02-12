@@ -92,7 +92,11 @@ const ProjectBoard = () => {
                       Create
                     </Button>
                   }
-                  children={<CreateTaskDialogContent />}
+                  children={
+                    <CreateTaskDialogContent
+                      projectDetailWithTasks={projectDetailWithTasks!}
+                    />
+                  }
                   popupId="createTaskDialog"
                   title="Create Task"
                   ariaLabel="create-task-dialog-title"

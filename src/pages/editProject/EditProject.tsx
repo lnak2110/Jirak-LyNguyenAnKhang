@@ -85,12 +85,17 @@ const EditProject = () => {
     resolver: yupResolver(schema),
   });
 
+  const onSubmit = async (data: EditProjectFormInputs) => {
+    await dispatch(updateProjectAPI(data));
+  };
+
   const watchId = watch('id', initialValues.id);
 
   useEffect(() => {
     dispatch(getProjectDetailAPI(projectId!));
   }, [dispatch, projectId]);
 
+  // Reset defaultvalues after received data from API
   useEffect(() => {
     if (projectDetailWithTasks) {
       reset({ ...initialValues });
@@ -103,10 +108,6 @@ const EditProject = () => {
       resetField('id');
     }
   }, [watchId, initialValues.id, resetField]);
-
-  const onSubmit = async (data: EditProjectFormInputs) => {
-    await dispatch(updateProjectAPI(data));
-  };
 
   // Edit fields name to be suitable with data sent by EditProject form
   const optionsCategory = projectCategories.map((category) => ({

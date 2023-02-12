@@ -14,6 +14,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import SearchIcon from '@mui/icons-material/Search';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
+import DialogContent from '@mui/material/DialogContent';
 import Grid from '@mui/material/Grid';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -77,109 +78,115 @@ const UsersDialogContent = ({
   };
 
   return (
-    <Grid container spacing={1}>
-      <Grid item md={6} sx={{ width: '100%' }}>
-        <TextField
-          type="search"
-          size="small"
-          placeholder="Search..."
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon />
-              </InputAdornment>
-            ),
-          }}
-          onChange={handleChangeKeyword}
-        />
-        <List>
-          {usersOutsideSearched?.map((user, index) => (
-            <ListItem
-              key={user.userId}
-              divider={index < usersOutsideSearched?.length - 1}
-              secondaryAction={
-                downSm ? (
-                  <IconButton
-                    color="primary"
-                    aria-label="add memeber to project"
-                    onClick={() => handleAddUserToProject(user.userId)}
-                  >
-                    <AddIcon />
-                  </IconButton>
-                ) : (
-                  <Button
-                    variant="outlined"
-                    startIcon={<AddIcon />}
-                    aria-label="add memeber to project"
-                    onClick={() => handleAddUserToProject(user.userId)}
-                  >
-                    Add
-                  </Button>
-                )
-              }
-            >
-              <ListItemAvatar>
-                <Avatar alt={user.name} src={user.avatar} />
-              </ListItemAvatar>
-              <ListItemText
-                primary={
-                  <Typography sx={{ maxWidth: '70%', wordBreak: 'break-word' }}>
-                    {user.name}
-                  </Typography>
+    <DialogContent>
+      <Grid container spacing={1}>
+        <Grid item md={6} sx={{ width: '100%' }}>
+          <TextField
+            type="search"
+            size="small"
+            placeholder="Search..."
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+            onChange={handleChangeKeyword}
+          />
+          <List>
+            {usersOutsideSearched?.map((user, index) => (
+              <ListItem
+                key={user.userId}
+                divider={index < usersOutsideSearched?.length - 1}
+                secondaryAction={
+                  downSm ? (
+                    <IconButton
+                      color="primary"
+                      aria-label="add memeber to project"
+                      onClick={() => handleAddUserToProject(user.userId)}
+                    >
+                      <AddIcon />
+                    </IconButton>
+                  ) : (
+                    <Button
+                      variant="outlined"
+                      startIcon={<AddIcon />}
+                      aria-label="add memeber to project"
+                      onClick={() => handleAddUserToProject(user.userId)}
+                    >
+                      Add
+                    </Button>
+                  )
                 }
-                secondary={`User ID: ${user.userId}`}
-              />
-            </ListItem>
-          ))}
-        </List>
-      </Grid>
-      <Grid item md={6} sx={{ width: '100%' }}>
-        <Typography variant="h6" component="h3" gutterBottom>
-          Already in the project
-        </Typography>
-        <List>
-          {usersInProject?.map((user, index) => (
-            <ListItem
-              key={user.userId}
-              divider={index < usersInProject?.length - 1}
-              secondaryAction={
-                downSm ? (
-                  <IconButton
-                    color="error"
-                    aria-label="delete user from project"
-                    onClick={() => handleDeleteUserFromProject(user)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                ) : (
-                  <Button
-                    color="error"
-                    variant="outlined"
-                    startIcon={<DeleteIcon />}
-                    aria-label="delete user from project"
-                    onClick={() => handleDeleteUserFromProject(user)}
-                  >
-                    Delete
-                  </Button>
-                )
-              }
-            >
-              <ListItemAvatar>
-                <Avatar alt={user.name} src={user.avatar} />
-              </ListItemAvatar>
-              <ListItemText
-                primary={
-                  <Typography sx={{ maxWidth: '60%', wordBreak: 'break-word' }}>
-                    {user.name}
-                  </Typography>
+              >
+                <ListItemAvatar>
+                  <Avatar alt={user.name} src={user.avatar} />
+                </ListItemAvatar>
+                <ListItemText
+                  primary={
+                    <Typography
+                      sx={{ maxWidth: '70%', wordBreak: 'break-word' }}
+                    >
+                      {user.name}
+                    </Typography>
+                  }
+                  secondary={`User ID: ${user.userId}`}
+                />
+              </ListItem>
+            ))}
+          </List>
+        </Grid>
+        <Grid item md={6} sx={{ width: '100%' }}>
+          <Typography variant="h6" component="h3" gutterBottom>
+            Already in the project
+          </Typography>
+          <List>
+            {usersInProject?.map((user, index) => (
+              <ListItem
+                key={user.userId}
+                divider={index < usersInProject?.length - 1}
+                secondaryAction={
+                  downSm ? (
+                    <IconButton
+                      color="error"
+                      aria-label="delete user from project"
+                      onClick={() => handleDeleteUserFromProject(user)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  ) : (
+                    <Button
+                      color="error"
+                      variant="outlined"
+                      startIcon={<DeleteIcon />}
+                      aria-label="delete user from project"
+                      onClick={() => handleDeleteUserFromProject(user)}
+                    >
+                      Delete
+                    </Button>
+                  )
                 }
-                secondary={`User ID: ${user.userId}`}
-              />
-            </ListItem>
-          ))}
-        </List>
+              >
+                <ListItemAvatar>
+                  <Avatar alt={user.name} src={user.avatar} />
+                </ListItemAvatar>
+                <ListItemText
+                  primary={
+                    <Typography
+                      sx={{ maxWidth: '60%', wordBreak: 'break-word' }}
+                    >
+                      {user.name}
+                    </Typography>
+                  }
+                  secondary={`User ID: ${user.userId}`}
+                />
+              </ListItem>
+            ))}
+          </List>
+        </Grid>
       </Grid>
-    </Grid>
+    </DialogContent>
   );
 };
 
