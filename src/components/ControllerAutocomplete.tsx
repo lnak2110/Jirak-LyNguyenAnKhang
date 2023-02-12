@@ -10,6 +10,8 @@ type ControllerAutocompleteProps<T extends FieldValues, OptionType> = {
   options: OptionType[];
   optionLabel: keyof OptionType;
   equalField: keyof OptionType;
+  isRequired?: boolean;
+  isMultiple?: true;
 };
 
 const ControllerAutocomplete = <T extends FieldValues, OptionType>({
@@ -20,6 +22,8 @@ const ControllerAutocomplete = <T extends FieldValues, OptionType>({
   options,
   optionLabel,
   equalField,
+  isRequired,
+  isMultiple,
 }: ControllerAutocompleteProps<T, OptionType>) => {
   return (
     <Controller
@@ -28,6 +32,8 @@ const ControllerAutocomplete = <T extends FieldValues, OptionType>({
       render={({ field: { onChange, value }, fieldState: { error } }) => (
         <Autocomplete
           disablePortal
+          multiple={isMultiple}
+          filterSelectedOptions={isMultiple}
           id={name}
           value={value}
           options={options}
@@ -39,11 +45,19 @@ const ControllerAutocomplete = <T extends FieldValues, OptionType>({
           renderInput={(params) => (
             <TextField
               {...params}
-              required
+              required={isRequired}
+              margin="dense"
               label={label}
               placeholder={placeholder}
               error={!!error}
               helperText={error?.message}
+              {...(isRequired &&
+                isMultiple && {
+                  inputProps: {
+                    ...params.inputProps,
+                    required: value?.length === 0,
+                  },
+                })}
             />
           )}
         />

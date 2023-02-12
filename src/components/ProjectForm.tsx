@@ -88,7 +88,7 @@ const ProjectForm = <T extends FieldValues>({
                   Create project
                 </Button>
                 <Button variant="outlined" fullWidth>
-                  Cancel
+                  Reset
                 </Button>
               </Grid>
             ) : (

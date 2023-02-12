@@ -3,12 +3,14 @@ import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux/es/hooks/useSelector';
 import { TypedUseSelectorHook } from 'react-redux/es/types';
 import projectReducer from './reducers/projectReducer';
+import taskReducer from './reducers/taskReducer';
 import userReducer from './reducers/userReducer';
 
 const store = configureStore({
   reducer: {
     userReducer,
     projectReducer,
+    taskReducer,
   },
 });
 

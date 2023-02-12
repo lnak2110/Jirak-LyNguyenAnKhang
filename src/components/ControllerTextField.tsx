@@ -7,6 +7,7 @@ type ControllerTextFieldProps<T extends FieldValues> = {
   label: string;
   type?: 'text' | 'number' | 'email';
   readonly?: true;
+  isRequired?: boolean;
 };
 
 const ControllerTextField = <T extends FieldValues>({
@@ -15,27 +16,31 @@ const ControllerTextField = <T extends FieldValues>({
   label,
   type = 'text',
   readonly,
+  isRequired = true,
 }: ControllerTextFieldProps<T>) => {
   return (
     <Controller
       control={control}
       name={name}
-      render={({ field, fieldState: { error } }) => (
+      render={({ field: { ref, ...field }, fieldState: { error } }) => (
         <TextField
           {...field}
-          required
+          inputRef={ref} // To scroll and focus error (RHF: shouldFocusError)
+          required={isRequired}
           fullWidth
+          margin="dense"
           id={name}
           label={label}
           autoComplete={name}
           error={!!error}
           helperText={error?.message}
+          type={type}
           inputProps={
             type === 'number'
               ? { inputMode: 'numeric', pattern: '[0-9]*' }
               : undefined
           }
-          InputProps={{ readOnly: readonly }}
+          InputProps={{ readOnly: readonly, inputProps: { min: 0 } }}
         />
       )}
     />

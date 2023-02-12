@@ -1,6 +1,5 @@
-import { cloneElement, ReactElement, ReactNode } from 'react';
+import { cloneElement, ReactElement } from 'react';
 import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
@@ -13,7 +12,7 @@ import {
 
 type DialogModalProps = {
   buttonOpen: ReactElement;
-  children: ReactNode;
+  children: ReactElement;
   popupId: string;
   title: string;
   ariaLabel: string;
@@ -32,7 +31,7 @@ const DialogModal = ({
     variant: 'dialog',
     popupId: popupId,
   });
-  console.log(preventCloseBackdrop);
+
   return (
     <>
       {cloneElement(buttonOpen, { ...bindTrigger(dialogPopupState) })}
@@ -74,7 +73,7 @@ const DialogModal = ({
           </IconButton>
         </DialogTitle>
         <Divider />
-        <DialogContent>{children}</DialogContent>
+        {cloneElement(children, { onCloseModal: dialogPopupState.close })}
       </Dialog>
     </>
   );
