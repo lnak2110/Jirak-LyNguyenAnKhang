@@ -1,21 +1,12 @@
 import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form';
-import { styled } from '@mui/material';
-import MuiSlider from '@mui/material/Slider';
-
-const Slider = styled(MuiSlider)({
-  '& .MuiSlider-markLabel[data-index="0"]': {
-    transform: 'translateX(0%)',
-  },
-  '& .MuiSlider-markLabel[data-index="1"]': {
-    transform: 'translateX(-100%)',
-  },
-});
+import Slider from '@mui/material/Slider';
 
 type ControllerSliderProps<T extends FieldValues> = {
   control: Control<T>;
   name: FieldPath<T>;
   min: number;
   max: number;
+  sliderKey: number;
 };
 
 const ControllerSlider = <T extends FieldValues>({
@@ -23,9 +14,11 @@ const ControllerSlider = <T extends FieldValues>({
   name,
   min,
   max,
+  sliderKey,
 }: ControllerSliderProps<T>) => {
   return (
     <Controller
+      key={sliderKey}
       control={control}
       name={name}
       render={({ field: { value } }) => (

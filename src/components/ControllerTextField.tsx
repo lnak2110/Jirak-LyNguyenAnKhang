@@ -41,6 +41,10 @@ const ControllerTextField = <T extends FieldValues>({
               : undefined
           }
           InputProps={{ readOnly: readonly, inputProps: { min: 0 } }}
+          // Disable scrolling on `<input type=number>`
+          {...(type === 'number' && {
+            onWheel: () => (document.activeElement as HTMLElement).blur(),
+          })}
         />
       )}
     />

@@ -1,4 +1,5 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useDebouncedCallback } from 'use-debounce';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -29,6 +30,7 @@ import {
   getAllPriorityAPI,
   getAllStatusAPI,
   getAllTaskTypeAPI,
+  setFalseTaskFulfilledAction,
 } from '../redux/reducers/taskReducer';
 
 type CreateTaskDialogContentProps = {
@@ -40,7 +42,9 @@ const CreateTaskDialogContent = ({
   projectDetailWithTasks,
   onCloseModal,
 }: CreateTaskDialogContentProps) => {
-  const { allStatus, allPriority, allTaskType } = useAppSelector(
+  const [sliderKey, setSliderKey] = useState(0);
+
+  const { taskFulfilled, allStatus, allPriority, allTaskType } = useAppSelector(
     (state: RootState) => state.taskReducer
   );
 
@@ -109,6 +113,13 @@ const CreateTaskDialogContent = ({
   const watchTimeTrackingSpent = +watch('timeTrackingSpent');
   const watchTimeTrackingRemaining = +watch('timeTrackingRemaining');
 
+  const debounced = useDebouncedCallback(
+    (field: keyof CreateTaskFormInputs, value: string | number) => {
+      setValue(field, value);
+    },
+    300
+  );
+
   // Reset defaultvalues after received data from API
   useEffect(() => {
     if (
@@ -141,11 +152,20 @@ const CreateTaskDialogContent = ({
   }, [watchOriginalEstimate, watchTimeTrackingSpent, setValue]);
 
   useEffect(() => {
-    setValue(
+    debounced(
       'timeTrackingRemaining',
       watchOriginalEstimate - watchTimeTrackingSpent
     );
-  }, [watchOriginalEstimate, watchTimeTrackingSpent, setValue]);
+  }, [watchOriginalEstimate, watchTimeTrackingSpent, debounced]);
+
+  useEffect(() => {
+    if (taskFulfilled) {
+      reset();
+      // Reset slider value
+      setSliderKey((key) => key + 1);
+      dispatch(setFalseTaskFulfilledAction());
+    }
+  }, [taskFulfilled, reset, dispatch]);
 
   return (
     <>
@@ -251,6 +271,7 @@ const CreateTaskDialogContent = ({
                   name="timeTrackingRemaining"
                   min={0}
                   max={watchOriginalEstimate}
+                  sliderKey={sliderKey}
                 />
               </Grid>
               <Grid
