@@ -1,4 +1,5 @@
 import { useState, ChangeEvent } from 'react';
+import { useDebounce } from 'use-debounce';
 import { useParams } from 'react-router-dom';
 import { Member } from '../types/productTypes';
 import { UserDetailType } from '../types/userTypes';
@@ -38,6 +39,8 @@ const UsersDialogContent = ({
 }: UsersDialogProps) => {
   const [keyword, setKeyword] = useState('');
 
+  const [keywordDebounced] = useDebounce(keyword, 300);
+
   const dispatch = useAppDispatch();
 
   const { projectId } = useParams();
@@ -49,7 +52,7 @@ const UsersDialogContent = ({
   const usersOutsideSearched = usersOutside.filter((user) =>
     removeAccents(user.name)
       .toLowerCase()
-      .includes(removeAccents(keyword).toLowerCase())
+      .includes(removeAccents(keywordDebounced).toLowerCase())
   );
 
   const handleChangeKeyword = (

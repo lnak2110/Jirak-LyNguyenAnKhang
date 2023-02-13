@@ -55,11 +55,18 @@ export const getAllTaskTypeAPI = createAsyncThunk(
 
 export const createTaskAPI = createAsyncThunk(
   'taskReducer/createTaskAPI',
-  async (createTaskFormInputs: CreateTaskFormInputs) => {
+  async (createTaskFormInputs: CreateTaskFormInputs, { rejectWithValue }) => {
     try {
+      const dataCreateTask = {
+        ...createTaskFormInputs,
+        listUserAsign: createTaskFormInputs?.listUserAsign?.map(
+          (user) => user.userId
+        ),
+      };
+
       const result = await axiosAuth.post(
         '/Project/createTask',
-        createTaskFormInputs
+        dataCreateTask
       );
       console.log(result);
       if (result?.status === 200) {
@@ -69,10 +76,13 @@ export const createTaskAPI = createAsyncThunk(
       console.log(error);
       if (error.response?.status === 403) {
         toast.error('You are not the creator of this project!');
+        return rejectWithValue('You are not the creator of this project!');
       } else if (error.response?.status === 500) {
         toast.error('Task name is already existed!');
+        return rejectWithValue('Task name is already existed!');
       } else {
         toast.error('Something wrong happened!');
+        return rejectWithValue('Something wrong happened!');
       }
     }
   }
@@ -80,6 +90,7 @@ export const createTaskAPI = createAsyncThunk(
 
 type InitialStateType = {
   isLoading: boolean;
+  taskFulfilled: boolean;
   allStatus: StatusType[];
   allPriority: PriorityType[];
   allTaskType: TaskTypeType[];
@@ -87,6 +98,7 @@ type InitialStateType = {
 
 const initialState = {
   isLoading: false,
+  taskFulfilled: false,
   allStatus: [],
   allPriority: [],
   allTaskType: [],
@@ -95,7 +107,11 @@ const initialState = {
 const taskReducer = createSlice({
   name: 'taskReducer',
   initialState,
-  reducers: {},
+  reducers: {
+    setFalseTaskFulfilledAction: (state) => {
+      state.taskFulfilled = false;
+    },
+  },
   extraReducers: (builder) => {
     // getAllStatusAPI
     builder.addCase(getAllStatusAPI.pending, (state) => {
@@ -136,6 +152,7 @@ const taskReducer = createSlice({
     });
     builder.addCase(createTaskAPI.fulfilled, (state) => {
       state.isLoading = false;
+      state.taskFulfilled = true;
     });
     builder.addCase(createTaskAPI.rejected, (state) => {
       state.isLoading = false;
@@ -143,6 +160,6 @@ const taskReducer = createSlice({
   },
 });
 
-export const {} = taskReducer.actions;
+export const { setFalseTaskFulfilledAction } = taskReducer.actions;
 
 export default taskReducer.reducer;
