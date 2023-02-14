@@ -45,6 +45,12 @@ const ControllerTextField = <T extends FieldValues>({
           {...(type === 'number' && {
             onWheel: () => (document.activeElement as HTMLElement).blur(),
           })}
+          // Prevent label goes down
+          {...(type === 'number' && {
+            InputLabelProps: {
+              shrink: true,
+            },
+          })}
         />
       )}
     />

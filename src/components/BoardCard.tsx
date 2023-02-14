@@ -1,19 +1,10 @@
 import { ReactNode } from 'react';
 import { theme } from '../App';
 import Card from '@mui/material/Card';
-import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
-
-type BoardCardChipType = {
-  label: string;
-};
 
 type BoardCardProps = {
   children: ReactNode;
-};
-
-export const BoardCardChip = ({ label }: BoardCardChipType) => {
-  return <Chip label={label} />;
 };
 
 const BoardCard = ({ children }: BoardCardProps) => {

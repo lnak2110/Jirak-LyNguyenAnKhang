@@ -1,13 +1,18 @@
-import { useState, ChangeEvent } from 'react';
+import { useState, ChangeEvent, useEffect } from 'react';
 import { useDebounce } from 'use-debounce';
 import { useParams } from 'react-router-dom';
 import { Member } from '../types/productTypes';
-import { UserDetailType } from '../types/userTypes';
-import { useAppDispatch } from '../redux/configStore';
+import {
+  RootState,
+  useAppDispatch,
+  useAppSelector,
+} from '../redux/configStore';
 import {
   addUserToProjectAPI,
   deleteUserFromProjectAPI,
+  getAllUsersAPI,
 } from '../redux/reducers/userReducer';
+import { getProjectDetailAPI } from '../redux/reducers/projectReducer';
 import { removeAccents } from '../utils/config';
 import { theme } from '../App';
 import AddIcon from '@mui/icons-material/Add';
@@ -28,15 +33,12 @@ import Typography from '@mui/material/Typography';
 import { useMediaQuery } from '@mui/material';
 import { useConfirm } from 'material-ui-confirm';
 
-type UsersDialogProps = {
-  usersOutside: UserDetailType[];
-  usersInProject: Member[];
-};
+const UsersDialogContent = () => {
+  const { users } = useAppSelector((state: RootState) => state.userReducer);
+  const { projectDetailWithTasks } = useAppSelector(
+    (state: RootState) => state.projectReducer
+  );
 
-const UsersDialogContent = ({
-  usersOutside,
-  usersInProject,
-}: UsersDialogProps) => {
   const [keyword, setKeyword] = useState('');
 
   const [keywordDebounced] = useDebounce(keyword, 300);
@@ -45,9 +47,21 @@ const UsersDialogContent = ({
 
   const { projectId } = useParams();
 
+  useEffect(() => {
+    dispatch(getProjectDetailAPI(projectId!));
+    dispatch(getAllUsersAPI());
+  }, [dispatch, projectId]);
+
   const confirm = useConfirm();
 
   const downSm = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const usersInProject = projectDetailWithTasks?.members;
+
+  // Users outside of the project
+  const usersOutside = users.filter(
+    (user) => !usersInProject?.some((userIn) => userIn.userId === user.userId)
+  );
 
   const usersOutsideSearched = usersOutside.filter((user) =>
     removeAccents(user.name)
