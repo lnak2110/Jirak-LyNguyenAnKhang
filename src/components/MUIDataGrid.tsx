@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { theme } from '../App';
-import { Member } from '../types/productTypes';
+import { Member } from '../types/projectTypes';
 import {
   DataGrid,
   GridColDef,

@@ -6,7 +6,7 @@ import {
   ProjectCategoryType,
   ProjectDetailType,
   ProjectDetailWithTasksType,
-} from '../../types/productTypes';
+} from '../../types/projectTypes';
 import { axiosAuth } from '../../utils/config';
 
 export const getAllProjectsAPI = createAsyncThunk(
@@ -72,7 +72,7 @@ export const createProjectAPI = createAsyncThunk(
 
 export const getProjectDetailAPI = createAsyncThunk(
   'projectReducer/getProjectDetailAPI',
-  async (projectId: string) => {
+  async (projectId: string | number, { rejectWithValue }) => {
     try {
       const result = await axiosAuth.get(
         `/Project/getProjectDetail?id=${projectId}`
@@ -81,8 +81,13 @@ export const getProjectDetailAPI = createAsyncThunk(
       if (result?.status === 200) {
         return result.data.content as ProjectDetailWithTasksType;
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
+      // Axios network error???
+      if (error) {
+        toast.error('Something wrong happened!');
+        return rejectWithValue('Something wrong happened!');
+      }
     }
   }
 );

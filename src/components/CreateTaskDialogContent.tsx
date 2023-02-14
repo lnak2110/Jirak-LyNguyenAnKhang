@@ -9,7 +9,7 @@ import {
   useAppSelector,
 } from '../redux/configStore';
 import { CreateTaskFormInputs } from '../types/taskTypes';
-import { ProjectDetailWithTasksType } from '../types/productTypes';
+import { ProjectDetailWithTasksType } from '../types/projectTypes';
 import ControllerAutocomplete from './ControllerAutocomplete';
 import ControllerEditor from './ControllerEditor';
 import ControllerSelect from './ControllerSelect';
@@ -73,7 +73,7 @@ const CreateTaskDialogContent = ({
         .min(0, 'Cannot be less than 0!')
         .max(
           yup.ref('originalEstimate'),
-          'Must be less than total estimated hour(s)!'
+          'Cannot be greater than total estimated time!'
         ),
       // .max(
       //   yup.ref('originalEstimate'),

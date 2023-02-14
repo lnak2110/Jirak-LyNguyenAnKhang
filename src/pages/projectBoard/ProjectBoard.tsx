@@ -7,7 +7,6 @@ import {
 } from '../../redux/configStore';
 import { getAllUsersAPI } from '../../redux/reducers/userReducer';
 import { getProjectDetailAPI } from '../../redux/reducers/projectReducer';
-import { getAllStatusAPI } from '../../redux/reducers/taskReducer';
 import { theme } from '../../App';
 import { UserAvatar } from '../../components/UsersAvatarGroup';
 import BoardCard from '../../components/BoardCard';
@@ -51,7 +50,6 @@ const ProjectBoard = () => {
   const { projectDetailWithTasks } = useAppSelector(
     (state: RootState) => state.projectReducer
   );
-  const { allStatus } = useAppSelector((state: RootState) => state.taskReducer);
 
   const dispatch = useAppDispatch();
 
@@ -60,8 +58,11 @@ const ProjectBoard = () => {
   useEffect(() => {
     dispatch(getProjectDetailAPI(projectId!));
     dispatch(getAllUsersAPI());
-    dispatch(getAllStatusAPI());
   }, [dispatch, projectId]);
+
+  // useEffect(() => {
+  //   dispatch(getProjectDetailAPI(projectId!));
+  // }, [dispatch, projectDetailWithTasks?.lstTask, projectId]);
 
   const downSm = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -69,29 +70,36 @@ const ProjectBoard = () => {
 
   return (
     <Grid container spacing={4}>
-      <Grid container item xs={12} sx={{ pb: 2 }}>
-        <Grid item xs={3}>
-          <Typography variant="h4" component="h1">
+      <Grid container item xs={12} spacing={2} sx={{ pb: 2 }}>
+        <Grid item xs={12} md={3}>
+          <Typography
+            variant="h4"
+            component="h1"
+            {...(downSm && { sx: { textAlign: 'center' } })}
+          >
             Board
           </Typography>
         </Grid>
-        <Grid
-          container
-          item
-          xs={9}
-          sx={{ display: 'flex', flexDirection: 'row' }}
-        >
-          <Grid
-            item
-            xs={9}
+        <Grid container item xs={12} md={9}>
+          <Stack
+            {...(downSm && { spacing: 2 })}
+            direction={downSm ? 'column' : 'row'}
             sx={{
+              width: '100%',
               display: 'flex',
               justifyContent: 'space-between',
             }}
           >
             <Stack direction={'row'} spacing={1}>
               <DialogModal
-                buttonOpen={<Button startIcon={<AddIcon />}>Add User</Button>}
+                buttonOpen={
+                  <Button
+                    {...(downSm && { sx: { width: '50%' } })}
+                    startIcon={<AddIcon />}
+                  >
+                    Add User
+                  </Button>
+                }
                 children={<UsersDialogContent />}
                 popupId="usersDialog"
                 title="All users"
@@ -124,21 +132,26 @@ const ProjectBoard = () => {
               ariaLabel="create-task-dialog-title"
               preventCloseBackdrop
             />
-          </Grid>
+          </Stack>
         </Grid>
       </Grid>
       <Grid container item xs={12} spacing={2}>
-        {allStatus?.map((status, index) => (
-          <Grid key={status.statusId} item xs={3}>
+        {projectDetailWithTasks?.lstTask?.map((list, index) => (
+          <Grid key={list.statusId} item xs={3}>
             <BoardCard>
               {
                 <>
                   <Chip
                     variant="outlined"
-                    label={status.statusName}
+                    label={list.statusName}
                     color={statusChips[index].color}
                     icon={statusChips[index].icon}
                   />
+                  <Stack>
+                    {list?.lstTaskDeTail?.map((task) => (
+                      <div key={task.taskId}>{task.taskName}</div>
+                    ))}
+                  </Stack>
                 </>
               }
             </BoardCard>

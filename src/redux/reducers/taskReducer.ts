@@ -7,6 +7,7 @@ import {
   TaskTypeType,
 } from '../../types/taskTypes';
 import { axiosAuth } from '../../utils/config';
+import { getProjectDetailAPI } from './projectReducer';
 
 export const getAllStatusAPI = createAsyncThunk(
   'taskReducer/getAllStatusAPI',
@@ -55,7 +56,10 @@ export const getAllTaskTypeAPI = createAsyncThunk(
 
 export const createTaskAPI = createAsyncThunk(
   'taskReducer/createTaskAPI',
-  async (createTaskFormInputs: CreateTaskFormInputs, { rejectWithValue }) => {
+  async (
+    createTaskFormInputs: CreateTaskFormInputs,
+    { dispatch, rejectWithValue }
+  ) => {
     try {
       const dataCreateTask = {
         ...createTaskFormInputs,
@@ -70,6 +74,7 @@ export const createTaskAPI = createAsyncThunk(
       );
       console.log(result);
       if (result?.status === 200) {
+        dispatch(getProjectDetailAPI(createTaskFormInputs.projectId));
         toast.success('Create a task successfully!');
       }
     } catch (error: any) {

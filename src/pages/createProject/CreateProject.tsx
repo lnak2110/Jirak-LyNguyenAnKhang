@@ -5,7 +5,7 @@ import * as yup from 'yup';
 import {
   CreateProjectFormInputs,
   ProjectCategoryType,
-} from '../../types/productTypes';
+} from '../../types/projectTypes';
 import {
   RootState,
   useAppDispatch,
