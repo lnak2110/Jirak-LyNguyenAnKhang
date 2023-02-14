@@ -1,3 +1,5 @@
+import { ListTaskType } from './taskTypes';
+
 export type Creator = {
   id: number;
   name: string;
@@ -7,13 +9,6 @@ export type Member = {
   userId?: number;
   name: string;
   avatar: string;
-};
-
-export type Task = {
-  statusId: string;
-  statusName: string;
-  alias: string;
-  lstTaskDeTail: [];
 };
 
 export type ProjectDetailType = {
@@ -29,7 +24,7 @@ export type ProjectDetailType = {
 };
 
 export type ProjectDetailWithTasksType = ProjectDetailType & {
-  lstTask: Task[];
+  lstTask: ListTaskType[];
   projectCategory: EditProjectCategoryType;
 } & Omit<ProjectDetailType, 'categoryId' | 'categoryName' | 'deleted'>;
 

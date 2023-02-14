@@ -68,6 +68,7 @@ export const getAllUsersAPI = createAsyncThunk(
   async () => {
     try {
       const result = await axiosAuth.get('/Users/getUser');
+
       if (result?.status === 200) {
         return result.data.content as UserDetailType[];
       }
@@ -85,7 +86,6 @@ export const addUserToProjectAPI = createAsyncThunk(
         '/Project/assignUserProject',
         userAndProjectData
       );
-      console.log(result);
 
       if (result?.status === 200) {
         // Refresh users list in the project

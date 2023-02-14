@@ -6,7 +6,7 @@ import * as yup from 'yup';
 import {
   EditProjectCategoryType,
   EditProjectFormInputs,
-} from '../../types/productTypes';
+} from '../../types/projectTypes';
 import {
   RootState,
   useAppDispatch,

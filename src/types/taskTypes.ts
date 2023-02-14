@@ -1,4 +1,4 @@
-import { Member } from './productTypes';
+import { Member } from './projectTypes';
 
 export type StatusType = {
   statusId: string;
@@ -31,4 +31,29 @@ export type CreateTaskFormInputs = {
   timeTrackingSpent: number;
   timeTrackingRemaining: number;
   description: string;
+};
+
+export type TaskDetailType = {
+  priorityTask: PriorityType;
+  taskTypeDetail: TaskTypeType;
+  assigness: any[];
+  lstComment: any[];
+  taskId: number;
+  taskName: string;
+  alias: string;
+  description: string;
+  statusId: string;
+  priorityId: number;
+  typeId: number;
+  projectId: number;
+  originalEstimate: number;
+  timeTrackingSpent: number;
+  timeTrackingRemaining: number;
+};
+
+export type ListTaskType = {
+  statusId: string;
+  statusName: string;
+  alias: string;
+  lstTaskDeTail: TaskDetailType[];
 };

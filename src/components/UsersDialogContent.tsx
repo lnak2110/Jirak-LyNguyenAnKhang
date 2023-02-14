@@ -1,7 +1,7 @@
 import { useState, ChangeEvent, useEffect } from 'react';
 import { useDebounce } from 'use-debounce';
 import { useParams } from 'react-router-dom';
-import { Member } from '../types/productTypes';
+import { Member } from '../types/projectTypes';
 import {
   RootState,
   useAppDispatch,
