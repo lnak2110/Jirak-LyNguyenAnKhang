@@ -63,14 +63,22 @@ const CreateTaskDialogContent = ({
     .object()
     .shape({
       taskName: yup.string().trim().required('Task name cannot be blank!'),
-      originalEstimate: yup.number().min(0, 'Cannot be less than 0!'),
+      originalEstimate: yup
+        .number()
+        .typeError('Invalid number!')
+        .min(0, 'Cannot be less than 0!'),
       timeTrackingSpent: yup
         .number()
+        .typeError('Invalid number!')
         .min(0, 'Cannot be less than 0!')
         .max(
           yup.ref('originalEstimate'),
-          ({ max }) => `You only have ${max} estimated hour(s)!`
+          'Must be less than total estimated hour(s)!'
         ),
+      // .max(
+      //   yup.ref('originalEstimate'),
+      //   ({ max }) => `You only have ${max} estimated hour(s)!`
+      // ),
     })
     .required();
 
@@ -101,7 +109,7 @@ const CreateTaskDialogContent = ({
   } = useForm<CreateTaskFormInputs>({
     defaultValues: initialValues,
     shouldFocusError: true,
-    mode: 'onSubmit',
+    mode: 'onTouched',
     resolver: yupResolver(schema),
   });
 
