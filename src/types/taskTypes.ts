@@ -1,4 +1,5 @@
 import { Member } from './projectTypes';
+import { Assignee } from './userTypes';
 
 export type StatusType = {
   statusId: string;
@@ -36,7 +37,7 @@ export type CreateTaskFormInputs = {
 export type TaskDetailType = {
   priorityTask: PriorityType;
   taskTypeDetail: TaskTypeType;
-  assigness: any[];
+  assigness: Assignee[];
   lstComment: any[];
   taskId: number;
   taskName: string;

@@ -25,6 +25,7 @@ import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useMediaQuery } from '@mui/material';
+import TaskCard from '../../components/TaskCard';
 
 const statusChips = [
   {
@@ -137,7 +138,7 @@ const ProjectBoard = () => {
       </Grid>
       <Grid container item xs={12} spacing={2}>
         {projectDetailWithTasks?.lstTask?.map((list, index) => (
-          <Grid key={list.statusId} item xs={3}>
+          <Grid key={list.statusId} item xs={12} sm={6} md={3}>
             <BoardCard>
               {
                 <>
@@ -147,9 +148,9 @@ const ProjectBoard = () => {
                     color={statusChips[index].color}
                     icon={statusChips[index].icon}
                   />
-                  <Stack>
+                  <Stack spacing={1} sx={{ width: '100%' }}>
                     {list?.lstTaskDeTail?.map((task) => (
-                      <div key={task.taskId}>{task.taskName}</div>
+                      <TaskCard key={task.taskId} task={task} />
                     ))}
                   </Stack>
                 </>

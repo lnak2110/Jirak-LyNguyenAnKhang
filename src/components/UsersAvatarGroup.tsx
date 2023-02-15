@@ -1,5 +1,6 @@
 import { theme } from '../App';
 import { Member } from '../types/projectTypes';
+import { SxProps } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Tooltip from '@mui/material/Tooltip';
@@ -26,10 +27,10 @@ type UsersAvatarGroupPropsType = {
   maxAvatarsDisplayed: number;
 };
 
-export const UserAvatar = ({ name, avatar }: Member) => {
+export const UserAvatar = ({ name, avatar, sx }: Member & { sx?: SxProps }) => {
   return (
     <Tooltip title={name}>
-      <Avatar alt={name} src={avatar} />
+      <Avatar alt={name} src={avatar} sx={sx} />
     </Tooltip>
   );
 };

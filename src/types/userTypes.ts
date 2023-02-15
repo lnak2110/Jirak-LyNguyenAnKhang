@@ -27,3 +27,9 @@ export type UserDetailType = {
   email: string;
   phoneNumber: string;
 };
+
+export type Assignee = {
+  id: number;
+  name: string;
+  avatar: string;
+};
