@@ -9,7 +9,7 @@ import { getAllUsersAPI } from '../../redux/reducers/userReducer';
 import { getProjectDetailAPI } from '../../redux/reducers/projectReducer';
 import { theme } from '../../App';
 import { UserAvatar } from '../../components/UsersAvatarGroup';
-import BoardCard from '../../components/BoardCard';
+import BoardCardContainer from '../../components/BoardCardContainer';
 import CreateTaskDialogContent from '../../components/CreateTaskDialogContent';
 import DialogModal from '../../components/DialogModal';
 import UsersDialogContent from '../../components/UsersDialogContent';
@@ -114,7 +114,7 @@ const ProjectBoard = () => {
       <Grid container item xs={12} spacing={2}>
         {projectDetailWithTasks?.lstTask?.map((listTask, index) => (
           <Grid key={listTask.statusId} item xs={12} sm={6} md={3}>
-            <BoardCard listTask={listTask} index={index} />
+            <BoardCardContainer listTask={listTask} index={index} />
           </Grid>
         ))}
       </Grid>
