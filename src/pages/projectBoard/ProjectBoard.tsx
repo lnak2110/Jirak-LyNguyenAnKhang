@@ -14,37 +14,12 @@ import CreateTaskDialogContent from '../../components/CreateTaskDialogContent';
 import DialogModal from '../../components/DialogModal';
 import UsersDialogContent from '../../components/UsersDialogContent';
 import AddIcon from '@mui/icons-material/Add';
-import EngineeringIcon from '@mui/icons-material/Engineering';
-import NextPlanIcon from '@mui/icons-material/NextPlan';
-import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
-import TaskIcon from '@mui/icons-material/Task';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Button from '@mui/material/Button';
-import Chip from '@mui/material/Chip';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useMediaQuery } from '@mui/material';
-import TaskCard from '../../components/TaskCard';
-
-const statusChips = [
-  {
-    color: 'info',
-    icon: <ReceiptLongIcon />,
-  },
-  {
-    color: 'warning',
-    icon: <NextPlanIcon />,
-  },
-  {
-    color: 'error',
-    icon: <EngineeringIcon />,
-  },
-  {
-    color: 'success',
-    icon: <TaskIcon />,
-  },
-] as const;
 
 const ProjectBoard = () => {
   const { users } = useAppSelector((state: RootState) => state.userReducer);
@@ -137,25 +112,9 @@ const ProjectBoard = () => {
         </Grid>
       </Grid>
       <Grid container item xs={12} spacing={2}>
-        {projectDetailWithTasks?.lstTask?.map((list, index) => (
-          <Grid key={list.statusId} item xs={12} sm={6} md={3}>
-            <BoardCard>
-              {
-                <>
-                  <Chip
-                    variant="outlined"
-                    label={list.statusName}
-                    color={statusChips[index].color}
-                    icon={statusChips[index].icon}
-                  />
-                  <Stack spacing={1} sx={{ width: '100%' }}>
-                    {list?.lstTaskDeTail?.map((task) => (
-                      <TaskCard key={task.taskId} task={task} />
-                    ))}
-                  </Stack>
-                </>
-              }
-            </BoardCard>
+        {projectDetailWithTasks?.lstTask?.map((listTask, index) => (
+          <Grid key={listTask.statusId} item xs={12} sm={6} md={3}>
+            <BoardCard listTask={listTask} index={index} />
           </Grid>
         ))}
       </Grid>
