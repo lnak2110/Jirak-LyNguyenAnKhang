@@ -15,9 +15,9 @@ import {
 import { getProjectDetailAPI } from '../redux/reducers/projectReducer';
 import { removeAccents } from '../utils/config';
 import { theme } from '../App';
-import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
-import SearchIcon from '@mui/icons-material/Search';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
+import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import DialogContent from '@mui/material/DialogContent';
@@ -105,7 +105,7 @@ const UsersDialogContent = () => {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <SearchIcon />
+                  <PersonSearchIcon />
                 </InputAdornment>
               ),
             }}
@@ -123,12 +123,12 @@ const UsersDialogContent = () => {
                       aria-label="add memeber to project"
                       onClick={() => handleAddUserToProject(user.userId)}
                     >
-                      <AddIcon />
+                      <PersonAddIcon />
                     </IconButton>
                   ) : (
                     <Button
                       variant="outlined"
-                      startIcon={<AddIcon />}
+                      startIcon={<PersonAddIcon />}
                       aria-label="add memeber to project"
                       onClick={() => handleAddUserToProject(user.userId)}
                     >
@@ -170,13 +170,13 @@ const UsersDialogContent = () => {
                       aria-label="delete user from project"
                       onClick={() => handleDeleteUserFromProject(user)}
                     >
-                      <DeleteIcon />
+                      <PersonRemoveIcon />
                     </IconButton>
                   ) : (
                     <Button
                       color="error"
                       variant="outlined"
-                      startIcon={<DeleteIcon />}
+                      startIcon={<PersonRemoveIcon />}
                       aria-label="delete user from project"
                       onClick={() => handleDeleteUserFromProject(user)}
                     >
