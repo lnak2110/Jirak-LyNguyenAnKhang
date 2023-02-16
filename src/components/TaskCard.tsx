@@ -1,5 +1,7 @@
 import { TaskDetailType } from '../types/taskTypes';
 import { UserAvatar } from './UsersAvatarGroup';
+import DialogModal from './DialogModal';
+import TaskDetailDialogContent from './TaskDetailDialogContent';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import BugReportIcon from '@mui/icons-material/BugReport';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -53,84 +55,102 @@ const TaskCard = ({ task, index }: TaskCardProps) => {
   return (
     <Draggable draggableId={task.taskId.toString()} index={index}>
       {(provided) => (
-        <Card
-          sx={{ '& .MuiCardContent-root': { p: 2 }, mb: 1 }}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-          ref={provided.innerRef}
-        >
-          <CardHeader
-            title={
-              <Tooltip title={task.taskName}>
-                <Typography
-                  sx={{
-                    display: 'inline-block',
-                    maxWidth: '100%',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                  }}
-                >
-                  {task.taskName}
-                </Typography>
-              </Tooltip>
-            }
-            sx={{ '& .MuiCardHeader-content': { overflow: 'hidden' }, pb: 0 }}
-          />
-          <CardContent
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              '&.MuiCardContent-root': { pb: 2 },
-            }}
-          >
-            <Stack spacing={1}>
-              <Chip
-                size="small"
-                variant="outlined"
-                label={task.priorityTask.priority}
-                icon={priorityChips[task.priorityTask.priorityId - 1].icon}
+        <DialogModal
+          key={task.taskId}
+          popupId={`dialog-task-${task.taskId}`}
+          title={task.taskName}
+          ariaLabel="task-dialog-title"
+          preventCloseBackdrop
+          buttonOpen={
+            <Card
+              sx={{
+                '& .MuiCardContent-root': { p: 2 },
+                mb: 1,
+                cursor: 'grab',
+              }}
+              {...provided.draggableProps}
+              {...provided.dragHandleProps}
+              ref={provided.innerRef}
+            >
+              <CardHeader
+                title={
+                  <Tooltip title={task.taskName}>
+                    <Typography
+                      sx={{
+                        display: 'inline-block',
+                        maxWidth: '100%',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                      }}
+                    >
+                      {task.taskName}
+                    </Typography>
+                  </Tooltip>
+                }
+                sx={{
+                  '& .MuiCardHeader-content': { overflow: 'hidden' },
+                  pb: 0,
+                }}
               />
-              <Chip
-                size="small"
-                variant="outlined"
-                label={task.taskTypeDetail.taskType}
-                icon={taskTypeChips[task.taskTypeDetail.id - 1].icon}
-                color={taskTypeChips[task.taskTypeDetail.id - 1].color}
-              />
-            </Stack>
-            {task.assigness.length ? (
-              <AvatarGroup
-                max={3}
-                slotProps={{
-                  additionalAvatar: { sx: { width: 32, height: 32 } },
+              <CardContent
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  '&.MuiCardContent-root': { pb: 2 },
                 }}
               >
-                {task?.assigness?.map((user) => (
-                  <UserAvatar
-                    key={user.id}
-                    name={user.name}
-                    avatar={user.avatar}
-                    sx={{ width: 32, height: 32 }}
+                <Stack spacing={1}>
+                  <Chip
+                    size="small"
+                    variant="outlined"
+                    label={task.priorityTask.priority}
+                    icon={priorityChips[task.priorityTask.priorityId - 1].icon}
                   />
-                ))}
-              </AvatarGroup>
-            ) : (
-              <Tooltip title={'No assignee'}>
-                <Avatar
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    width: 32,
-                    height: 32,
-                  }}
-                >
-                  <PersonOffIcon />
-                </Avatar>
-              </Tooltip>
-            )}
-          </CardContent>
-        </Card>
+                  <Chip
+                    size="small"
+                    variant="outlined"
+                    label={task.taskTypeDetail.taskType}
+                    icon={taskTypeChips[task.taskTypeDetail.id - 1].icon}
+                    color={taskTypeChips[task.taskTypeDetail.id - 1].color}
+                  />
+                </Stack>
+                {task.assigness.length ? (
+                  <AvatarGroup
+                    max={3}
+                    slotProps={{
+                      additionalAvatar: { sx: { width: 32, height: 32 } },
+                    }}
+                  >
+                    {task?.assigness?.map((user) => (
+                      <UserAvatar
+                        key={user.id}
+                        name={user.name}
+                        avatar={user.avatar}
+                        sx={{ width: 32, height: 32 }}
+                      />
+                    ))}
+                  </AvatarGroup>
+                ) : (
+                  <Tooltip title={'No assignee'}>
+                    <Avatar
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        width: 32,
+                        height: 32,
+                      }}
+                    >
+                      <PersonOffIcon />
+                    </Avatar>
+                  </Tooltip>
+                )}
+              </CardContent>
+            </Card>
+          }
+        >
+          <TaskDetailDialogContent taskId={task.taskId} />
+        </DialogModal>
       )}
     </Draggable>
   );

@@ -4,7 +4,9 @@ import {
   CreateTaskFormInputs,
   PriorityType,
   StatusType,
+  TaskDetailType,
   TaskTypeType,
+  UpdateTaskFormInputs,
 } from '../../types/taskTypes';
 import { axiosAuth } from '../../utils/config';
 import { getProjectDetailAPI } from './projectReducer';
@@ -119,12 +121,71 @@ export const updateStatusTaskAPI = createAsyncThunk(
   }
 );
 
+export const getTaskDetailAPI = createAsyncThunk(
+  'taskReducer/getTaskDetailAPI',
+  async (taskId: number) => {
+    try {
+      const result = await axiosAuth.get(
+        `/Project/getTaskDetail?taskId=${taskId}`
+      );
+
+      if (result?.status === 200) {
+        return result.data.content as TaskDetailType;
+      }
+    } catch (error) {
+      console.log(error);
+      if (error) {
+        toast.error('Something wrong happened!');
+      }
+    }
+  }
+);
+
+export const updateTaskAPI = createAsyncThunk(
+  'taskReducer/updateTaskAPI',
+  async (
+    updateTaskFormInputs: UpdateTaskFormInputs,
+    { dispatch, rejectWithValue }
+  ) => {
+    try {
+      const dataUpdateTask = {
+        ...updateTaskFormInputs,
+        listUserAsign: updateTaskFormInputs?.listUserAsign?.map(
+          (user) => user.id
+        ),
+      };
+
+      const result = await axiosAuth.post(
+        '/Project/updateTask',
+        dataUpdateTask
+      );
+      console.log(result);
+      if (result?.status === 200) {
+        toast.success('Update a task successfully!');
+        dispatch(getProjectDetailAPI(updateTaskFormInputs.projectId));
+      }
+    } catch (error: any) {
+      console.log(error);
+      if (error) {
+        if (error.response?.status === 403) {
+          toast.error('You are not the creator of this project!');
+          return rejectWithValue('You are not the creator of this project!');
+        } else {
+          toast.error('Something wrong happened!');
+          return rejectWithValue('You are not the creator of this project!');
+        }
+      }
+    }
+  }
+);
+
 type InitialStateType = {
   isLoading: boolean;
   taskFulfilled: boolean;
   allStatus: StatusType[];
   allPriority: PriorityType[];
   allTaskType: TaskTypeType[];
+  taskDetail: TaskDetailType | null;
 };
 
 const initialState = {
@@ -133,6 +194,7 @@ const initialState = {
   allStatus: [],
   allPriority: [],
   allTaskType: [],
+  taskDetail: null,
 } as InitialStateType;
 
 const taskReducer = createSlice({
@@ -186,6 +248,28 @@ const taskReducer = createSlice({
       state.taskFulfilled = true;
     });
     builder.addCase(createTaskAPI.rejected, (state) => {
+      state.isLoading = false;
+    });
+    // getTaskDetailAPI
+    builder.addCase(getTaskDetailAPI.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(getTaskDetailAPI.fulfilled, (state, { payload }) => {
+      state.isLoading = false;
+      state.taskDetail = payload!;
+    });
+    builder.addCase(getTaskDetailAPI.rejected, (state) => {
+      state.isLoading = false;
+    });
+    // updateTaskAPI
+    builder.addCase(updateTaskAPI.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(updateTaskAPI.fulfilled, (state, { payload }) => {
+      state.isLoading = false;
+      state.taskDetail = payload!;
+    });
+    builder.addCase(updateTaskAPI.rejected, (state) => {
       state.isLoading = false;
     });
   },

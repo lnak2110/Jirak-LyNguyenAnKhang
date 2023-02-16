@@ -6,7 +6,7 @@ type ControllerSliderProps<T extends FieldValues> = {
   name: FieldPath<T>;
   min: number;
   max: number;
-  sliderKey: number;
+  sliderKey?: number;
 };
 
 const ControllerSlider = <T extends FieldValues>({

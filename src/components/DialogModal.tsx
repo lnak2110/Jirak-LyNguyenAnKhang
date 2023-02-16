@@ -1,9 +1,10 @@
 import { cloneElement, ReactElement } from 'react';
+import CloseIcon from '@mui/icons-material/Close';
+import Box from '@mui/material/Box';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
 import {
   bindDialog,
   bindTrigger,
@@ -34,7 +35,9 @@ const DialogModal = ({
 
   return (
     <>
-      {cloneElement(buttonOpen, { ...bindTrigger(dialogPopupState) })}
+      {cloneElement(buttonOpen, {
+        ...bindTrigger(dialogPopupState),
+      })}
       <Dialog
         {...bindDialog(dialogPopupState)}
         PaperProps={{
@@ -63,7 +66,9 @@ const DialogModal = ({
             justifyContent: 'space-between',
           }}
         >
-          {title}
+          <Box sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            {title}
+          </Box>
           <IconButton
             aria-label="close"
             edge="end"

@@ -34,6 +34,13 @@ export type CreateTaskFormInputs = {
   description: string;
 };
 
+export type UpdateTaskFormInputs = Omit<
+  CreateTaskFormInputs,
+  'listUserAsign'
+> & {
+  listUserAsign: Assignee[];
+};
+
 export type TaskDetailType = {
   priorityTask: PriorityType;
   taskTypeDetail: TaskTypeType;
