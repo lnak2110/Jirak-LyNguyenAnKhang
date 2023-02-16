@@ -93,6 +93,32 @@ export const createTaskAPI = createAsyncThunk(
   }
 );
 
+export const updateStatusTaskAPI = createAsyncThunk(
+  'taskReducer/updateStatusTaskAPI',
+  async (
+    updateStatusData: { taskId: number; statusId: string; projectId: string },
+    { dispatch }
+  ) => {
+    const { projectId, ...restUpdateStatusData } = updateStatusData;
+
+    try {
+      const result = await axiosAuth.put(
+        '/Project/updateStatus',
+        restUpdateStatusData
+      );
+      if (result?.status === 200) {
+        dispatch(getProjectDetailAPI(projectId));
+      }
+    } catch (error: any) {
+      console.log(error);
+      if (error) {
+        toast.error('Something wrong happened!');
+        dispatch(getProjectDetailAPI(projectId));
+      }
+    }
+  }
+);
+
 type InitialStateType = {
   isLoading: boolean;
   taskFulfilled: boolean;

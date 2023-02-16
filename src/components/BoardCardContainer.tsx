@@ -5,9 +5,10 @@ import EngineeringIcon from '@mui/icons-material/Engineering';
 import NextPlanIcon from '@mui/icons-material/NextPlan';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import TaskIcon from '@mui/icons-material/Task';
-import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
+import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
+import { Droppable } from '@hello-pangea/dnd';
 
 const statusChips = [
   {
@@ -35,21 +36,33 @@ type BoardCardContainerProps = {
 
 const BoardCardContainer = ({ listTask, index }: BoardCardContainerProps) => {
   return (
-    <Card sx={{ bgcolor: theme.palette.grey[100] }}>
-      <Stack spacing={1} sx={{ p: 1, alignItems: 'flex-start' }}>
+    <Paper sx={{ bgcolor: theme.palette.grey[100], width: '100%' }}>
+      <Stack
+        spacing={2}
+        sx={{ p: 1, alignItems: 'flex-start', height: '100%' }}
+      >
         <Chip
           variant="outlined"
           label={listTask.statusName}
           color={statusChips[index].color}
           icon={statusChips[index].icon}
         />
-        <Stack spacing={1} sx={{ width: '100%' }}>
-          {listTask?.lstTaskDeTail?.map((task) => (
-            <TaskCard key={task.taskId} task={task} />
-          ))}
-        </Stack>
+        <Droppable droppableId={listTask.statusId}>
+          {(provided) => (
+            <Stack
+              sx={{ width: '100%', height: '100%' }}
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+            >
+              {listTask?.lstTaskDeTail?.map((task, index) => (
+                <TaskCard key={task.taskId} task={task} index={index} />
+              ))}
+              {provided.placeholder}
+            </Stack>
+          )}
+        </Droppable>
       </Stack>
-    </Card>
+    </Paper>
   );
 };
 

@@ -16,6 +16,7 @@ import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
+import { Draggable } from '@hello-pangea/dnd';
 
 const priorityChips = [
   {
@@ -45,83 +46,93 @@ const taskTypeChips = [
 
 type TaskCardProps = {
   task: TaskDetailType;
+  index: number;
 };
 
-const TaskCard = ({ task }: TaskCardProps) => {
+const TaskCard = ({ task, index }: TaskCardProps) => {
   return (
-    <Card sx={{ '& .MuiCardContent-root': { p: 2 } }}>
-      <CardHeader
-        title={
-          <Tooltip title={task.taskName}>
-            <Typography
-              sx={{
-                display: 'inline-block',
-                maxWidth: '100%',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-              }}
-            >
-              {task.taskName}
-            </Typography>
-          </Tooltip>
-        }
-        sx={{ '& .MuiCardHeader-content': { overflow: 'hidden' }, pb: 0 }}
-      />
-      <CardContent
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          '&.MuiCardContent-root': { pb: 2 },
-        }}
-      >
-        <Stack spacing={1}>
-          <Chip
-            size="small"
-            variant="outlined"
-            label={task.priorityTask.priority}
-            icon={priorityChips[task.priorityTask.priorityId - 1].icon}
+    <Draggable draggableId={task.taskId.toString()} index={index}>
+      {(provided) => (
+        <Card
+          sx={{ '& .MuiCardContent-root': { p: 2 }, mb: 1 }}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          ref={provided.innerRef}
+        >
+          <CardHeader
+            title={
+              <Tooltip title={task.taskName}>
+                <Typography
+                  sx={{
+                    display: 'inline-block',
+                    maxWidth: '100%',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                  }}
+                >
+                  {task.taskName}
+                </Typography>
+              </Tooltip>
+            }
+            sx={{ '& .MuiCardHeader-content': { overflow: 'hidden' }, pb: 0 }}
           />
-          <Chip
-            size="small"
-            variant="outlined"
-            label={task.taskTypeDetail.taskType}
-            icon={taskTypeChips[task.taskTypeDetail.id - 1].icon}
-            color={taskTypeChips[task.taskTypeDetail.id - 1].color}
-          />
-        </Stack>
-        {task.assigness.length ? (
-          <AvatarGroup
-            max={3}
-            slotProps={{
-              additionalAvatar: { sx: { width: 32, height: 32 } },
+          <CardContent
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              '&.MuiCardContent-root': { pb: 2 },
             }}
           >
-            {task?.assigness?.map((user) => (
-              <UserAvatar
-                key={user.id}
-                name={user.name}
-                avatar={user.avatar}
-                sx={{ width: 32, height: 32 }}
+            <Stack spacing={1}>
+              <Chip
+                size="small"
+                variant="outlined"
+                label={task.priorityTask.priority}
+                icon={priorityChips[task.priorityTask.priorityId - 1].icon}
               />
-            ))}
-          </AvatarGroup>
-        ) : (
-          <Tooltip title={'No assignee'}>
-            <Avatar
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                width: 32,
-                height: 32,
-              }}
-            >
-              <PersonOffIcon />
-            </Avatar>
-          </Tooltip>
-        )}
-      </CardContent>
-    </Card>
+              <Chip
+                size="small"
+                variant="outlined"
+                label={task.taskTypeDetail.taskType}
+                icon={taskTypeChips[task.taskTypeDetail.id - 1].icon}
+                color={taskTypeChips[task.taskTypeDetail.id - 1].color}
+              />
+            </Stack>
+            {task.assigness.length ? (
+              <AvatarGroup
+                max={3}
+                slotProps={{
+                  additionalAvatar: { sx: { width: 32, height: 32 } },
+                }}
+              >
+                {task?.assigness?.map((user) => (
+                  <UserAvatar
+                    key={user.id}
+                    name={user.name}
+                    avatar={user.avatar}
+                    sx={{ width: 32, height: 32 }}
+                  />
+                ))}
+              </AvatarGroup>
+            ) : (
+              <Tooltip title={'No assignee'}>
+                <Avatar
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    width: 32,
+                    height: 32,
+                  }}
+                >
+                  <PersonOffIcon />
+                </Avatar>
+              </Tooltip>
+            )}
+          </CardContent>
+        </Card>
+      )}
+    </Draggable>
   );
 };
 
