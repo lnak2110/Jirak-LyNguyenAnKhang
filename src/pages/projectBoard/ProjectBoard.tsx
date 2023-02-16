@@ -49,7 +49,7 @@ const ProjectBoard = () => {
 
   const downSm = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const handleDragEnd = async (result: DropResult) => {
+  const handleDragEnd = (result: DropResult) => {
     const { draggableId, destination, source } = result;
 
     if (!destination) {
@@ -104,7 +104,7 @@ const ProjectBoard = () => {
       projectId: projectId!,
     };
 
-    await dispatch(updateStatusTaskAPI(updateStatusData));
+    dispatch(updateStatusTaskAPI(updateStatusData));
   };
 
   const usersInProject = projectDetailWithTasks?.members;

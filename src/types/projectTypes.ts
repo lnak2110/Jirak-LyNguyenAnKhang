@@ -23,10 +23,13 @@ export type ProjectDetailType = {
   deleted: boolean;
 };
 
-export type ProjectDetailWithTasksType = ProjectDetailType & {
+export type ProjectDetailWithTasksType = Omit<
+  ProjectDetailType,
+  'lstTask' | 'categoryId' | 'categoryName' | 'deleted'
+> & {
   lstTask: ListTaskType[];
   projectCategory: EditProjectCategoryType;
-} & Omit<ProjectDetailType, 'categoryId' | 'categoryName' | 'deleted'>;
+};
 
 export type EditProjectCategoryType = {
   id: number;

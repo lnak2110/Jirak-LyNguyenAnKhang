@@ -36,8 +36,8 @@ const ControllerAutocomplete = <T extends FieldValues, OptionType>({
           filterSelectedOptions={isMultiple}
           id={name}
           value={value}
-          options={options}
-          getOptionLabel={(option) => option?.[optionLabel] as string}
+          options={options || []}
+          getOptionLabel={(option) => (option?.[optionLabel] as string) || ''}
           isOptionEqualToValue={(option, value) =>
             option[equalField] === value[equalField]
           }

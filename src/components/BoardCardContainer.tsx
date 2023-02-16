@@ -50,7 +50,7 @@ const BoardCardContainer = ({ listTask, index }: BoardCardContainerProps) => {
         <Droppable droppableId={listTask.statusId}>
           {(provided) => (
             <Stack
-              sx={{ width: '100%', height: '100%' }}
+              sx={{ width: '100%', height: '100%', mb: 0 }}
               ref={provided.innerRef}
               {...provided.droppableProps}
             >
