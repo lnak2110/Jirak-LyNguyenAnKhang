@@ -1,56 +1,36 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import {
   RootState,
   useAppDispatch,
   useAppSelector,
 } from '../../redux/configStore';
+import { ListTaskType } from '../../types/taskTypes';
 import { getAllUsersAPI } from '../../redux/reducers/userReducer';
 import { getProjectDetailAPI } from '../../redux/reducers/projectReducer';
+import { updateStatusTaskAPI } from '../../redux/reducers/taskReducer';
 import { theme } from '../../App';
 import { UserAvatar } from '../../components/UsersAvatarGroup';
-import BoardCard from '../../components/BoardCard';
+import BoardCardContainer from '../../components/BoardCardContainer';
 import CreateTaskDialogContent from '../../components/CreateTaskDialogContent';
 import DialogModal from '../../components/DialogModal';
 import UsersDialogContent from '../../components/UsersDialogContent';
 import AddIcon from '@mui/icons-material/Add';
-import EngineeringIcon from '@mui/icons-material/Engineering';
-import NextPlanIcon from '@mui/icons-material/NextPlan';
-import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
-import TaskIcon from '@mui/icons-material/Task';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Button from '@mui/material/Button';
-import Chip from '@mui/material/Chip';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useMediaQuery } from '@mui/material';
-import TaskCard from '../../components/TaskCard';
-
-const statusChips = [
-  {
-    color: 'info',
-    icon: <ReceiptLongIcon />,
-  },
-  {
-    color: 'warning',
-    icon: <NextPlanIcon />,
-  },
-  {
-    color: 'error',
-    icon: <EngineeringIcon />,
-  },
-  {
-    color: 'success',
-    icon: <TaskIcon />,
-  },
-] as const;
+import { DragDropContext, DropResult } from '@hello-pangea/dnd';
 
 const ProjectBoard = () => {
   const { users } = useAppSelector((state: RootState) => state.userReducer);
   const { projectDetailWithTasks } = useAppSelector(
     (state: RootState) => state.projectReducer
   );
+
+  const [listsTemp, setListTemp] = useState<ListTaskType[] | null>(null);
 
   const dispatch = useAppDispatch();
 
@@ -61,14 +41,73 @@ const ProjectBoard = () => {
     dispatch(getAllUsersAPI());
   }, [dispatch, projectId]);
 
-  // useEffect(() => {
-  //   dispatch(getProjectDetailAPI(projectId!));
-  // }, [dispatch, projectDetailWithTasks?.lstTask, projectId]);
+  useEffect(() => {
+    if (projectDetailWithTasks?.lstTask) {
+      setListTemp(projectDetailWithTasks?.lstTask!);
+    }
+  }, [dispatch, projectDetailWithTasks]);
 
   const downSm = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const usersInProject = projectDetailWithTasks?.members;
+  const handleDragEnd = async (result: DropResult) => {
+    const { draggableId, destination, source } = result;
 
+    if (!destination) {
+      return;
+    }
+
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    ) {
+      return;
+    }
+
+    const startColumnIndex = +source.droppableId - 1;
+    const finishColumnIndex = +destination.droppableId - 1;
+    const startColumn = listsTemp![startColumnIndex];
+    const finishColumn = listsTemp![finishColumnIndex];
+
+    if (startColumn?.statusId === finishColumn?.statusId) {
+      return;
+    }
+
+    const startListCopy = [...startColumn?.lstTaskDeTail!];
+    startListCopy.splice(source.index, 1);
+    const newStartList = {
+      ...startColumn,
+      lstTaskDeTail: startListCopy,
+    };
+
+    const taskToUpdate = startColumn?.lstTaskDeTail.find(
+      (task) => task.taskId === +draggableId
+    );
+    const finishListCopy = [...finishColumn?.lstTaskDeTail!];
+    finishListCopy.splice(
+      destination.index,
+      0,
+      { ...taskToUpdate!, statusId: destination.droppableId }!
+    );
+    const newFinishList = {
+      ...finishColumn,
+      lstTaskDeTail: finishListCopy,
+    };
+
+    const newListsTemp = [...listsTemp!];
+    newListsTemp[startColumnIndex] = newStartList as ListTaskType;
+    newListsTemp[finishColumnIndex] = newFinishList as ListTaskType;
+    setListTemp(newListsTemp);
+
+    const updateStatusData = {
+      taskId: +draggableId,
+      statusId: destination.droppableId,
+      projectId: projectId!,
+    };
+
+    await dispatch(updateStatusTaskAPI(updateStatusData));
+  };
+
+  const usersInProject = projectDetailWithTasks?.members;
   return (
     <Grid container spacing={4}>
       <Grid container item xs={12} spacing={2} sx={{ pb: 2 }}>
@@ -136,29 +175,22 @@ const ProjectBoard = () => {
           </Stack>
         </Grid>
       </Grid>
-      <Grid container item xs={12} spacing={2}>
-        {projectDetailWithTasks?.lstTask?.map((list, index) => (
-          <Grid key={list.statusId} item xs={12} sm={6} md={3}>
-            <BoardCard>
-              {
-                <>
-                  <Chip
-                    variant="outlined"
-                    label={list.statusName}
-                    color={statusChips[index].color}
-                    icon={statusChips[index].icon}
-                  />
-                  <Stack spacing={1} sx={{ width: '100%' }}>
-                    {list?.lstTaskDeTail?.map((task) => (
-                      <TaskCard key={task.taskId} task={task} />
-                    ))}
-                  </Stack>
-                </>
-              }
-            </BoardCard>
-          </Grid>
-        ))}
-      </Grid>
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <Grid container item xs={12} spacing={2}>
+          {listsTemp?.map((listTask, index) => (
+            <Grid
+              key={listTask.statusId}
+              item
+              xs={12}
+              sm={6}
+              md={3}
+              sx={{ display: 'flex' }}
+            >
+              <BoardCardContainer listTask={listTask} index={index} />
+            </Grid>
+          ))}
+        </Grid>
+      </DragDropContext>
     </Grid>
   );
 };
