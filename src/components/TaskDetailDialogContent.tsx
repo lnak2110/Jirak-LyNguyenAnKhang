@@ -33,15 +33,15 @@ import {
   updateTaskAPI,
 } from '../redux/reducers/taskReducer';
 
-type CreateTaskDialogContentProps = {
+type TaskDetailDialogContentProps = {
   taskId: number;
-  onCloseModal?: () => void;
+  handleCloseModal?: () => void;
 };
 
-const CreateTaskDialogContent = ({
+const TaskDetailDialogContent = ({
   taskId,
-  onCloseModal,
-}: CreateTaskDialogContentProps) => {
+  handleCloseModal,
+}: TaskDetailDialogContentProps) => {
   const { allStatus, allPriority, allTaskType, taskDetail } = useAppSelector(
     (state: RootState) => state.taskReducer
   );
@@ -328,13 +328,13 @@ const CreateTaskDialogContent = ({
           >
             Update Task
           </Button>
-          <Button variant="outlined" fullWidth onClick={onCloseModal}>
+          <Button variant="outlined" fullWidth onClick={handleCloseModal}>
             Cancel
           </Button>
         </DialogActions>
       ) : (
         <DialogActions disableSpacing>
-          <Button variant="outlined" onClick={onCloseModal}>
+          <Button variant="outlined" onClick={handleCloseModal}>
             Cancel
           </Button>
           <Button
@@ -352,4 +352,4 @@ const CreateTaskDialogContent = ({
   );
 };
 
-export default CreateTaskDialogContent;
+export default TaskDetailDialogContent;

@@ -1,11 +1,12 @@
-import { ReactNode, useState } from 'react';
+import { cloneElement, ReactElement, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 
 type TaskDetailDialogTabsProps = {
-  taskDetailTabContent: ReactNode;
-  commentsTabContent: ReactNode;
+  taskDetailTabContent: ReactElement;
+  commentsTabContent: ReactElement;
+  handleCloseModal?: () => void;
 };
 
 type TabsName = {
@@ -15,6 +16,7 @@ type TabsName = {
 const TaskDetailDialogTabs = ({
   taskDetailTabContent,
   commentsTabContent,
+  handleCloseModal,
 }: TaskDetailDialogTabsProps) => {
   const [tabValue, setTabValue] = useState<TabsName>(
     'Task Detail' as unknown as TabsName
@@ -40,7 +42,7 @@ const TaskDetailDialogTabs = ({
         </Tabs>
       </AppBar>
       {tabValue === ('Task Detail' as unknown as TabsName)
-        ? taskDetailTabContent
+        ? cloneElement(taskDetailTabContent, { handleCloseModal })
         : commentsTabContent}
     </>
   );

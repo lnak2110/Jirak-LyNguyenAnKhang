@@ -4,10 +4,12 @@ import {
   isAnyOf,
   PayloadAction,
 } from '@reduxjs/toolkit';
+import axios from 'axios';
 import { toast } from 'react-toastify';
 import { router } from '../../App';
 import {
   CurrentUserDataType,
+  EditUserFormInputs,
   LoginFormInputs,
   RegisterFormInputs,
   UserAndProjectType,
@@ -26,7 +28,7 @@ import {
 import { getProjectDetailAPI } from './projectReducer';
 
 export const registerAPI = createAsyncThunk(
-  'userReducer/register',
+  'userReducer/registerAPI',
   async (registerFormInputs: RegisterFormInputs, { rejectWithValue }) => {
     try {
       const result = await axiosAuth.post('/Users/signup', registerFormInputs);
@@ -45,7 +47,7 @@ export const registerAPI = createAsyncThunk(
 );
 
 export const loginAPI = createAsyncThunk(
-  'userReducer/login',
+  'userReducer/loginAPI',
   async (loginFormInputs: LoginFormInputs, { dispatch, rejectWithValue }) => {
     try {
       const result = await axiosAuth.post('/Users/signin', loginFormInputs);
@@ -163,6 +165,41 @@ export const deleteUserFromProjectAPI = createAsyncThunk(
   }
 );
 
+export const editUserAPI = createAsyncThunk(
+  'userReducer/editUserAPI',
+  async (
+    editUserFormInputs: EditUserFormInputs,
+    { dispatch, rejectWithValue }
+  ) => {
+    try {
+      const result = await axiosAuth.put('/Users/editUser', editUserFormInputs);
+
+      if (result?.status === 200) {
+        const { id, name, email, phoneNumber } = editUserFormInputs;
+        const avatarAPIResult = await axios.get(
+          `https://ui-avatars.com/api/?name=${name}`
+        );
+        dispatch(
+          saveCurrentUserDataAction({
+            id: +id,
+            name,
+            email,
+            phoneNumber,
+            avatar: avatarAPIResult.data,
+          })
+        );
+        toast.success('Update user information successfully!');
+      }
+    } catch (error) {
+      console.log(error);
+      if (error) {
+        toast.error('Something wrong happened!');
+        return rejectWithValue('Something wrong happened!');
+      }
+    }
+  }
+);
+
 type InitialStateType = {
   isLoading: boolean;
   userLogin: UserLogin | null;
@@ -193,10 +230,11 @@ const userReducer = createSlice({
       { payload }: PayloadAction<CurrentUserDataType>
     ) => {
       state.currentUserData = payload;
+      setStore(process.env.REACT_APP_CURRENT_USER_DATA!, payload);
     },
   },
   extraReducers: (builder) => {
-    // Register
+    // registerAPI
     builder.addCase(registerAPI.pending, (state) => {
       state.isLoading = true;
     });
@@ -206,7 +244,7 @@ const userReducer = createSlice({
     builder.addCase(registerAPI.rejected, (state) => {
       state.isLoading = false;
     });
-    // Login
+    // loginAPI
     builder.addCase(loginAPI.pending, (state) => {
       state.isLoading = true;
     });
@@ -227,6 +265,16 @@ const userReducer = createSlice({
       state.users = payload!;
     });
     builder.addCase(getAllUsersAPI.rejected, (state) => {
+      state.isLoading = false;
+    });
+    // editUserAPI
+    builder.addCase(editUserAPI.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(editUserAPI.fulfilled, (state) => {
+      state.isLoading = false;
+    });
+    builder.addCase(editUserAPI.rejected, (state) => {
       state.isLoading = false;
     });
     // addUserToProjectAPI, deleteUserFromProjectAPI

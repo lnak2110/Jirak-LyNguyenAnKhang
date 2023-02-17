@@ -1,7 +1,13 @@
 import { useState } from 'react';
 import { matchPath, NavLink, useLocation } from 'react-router-dom';
-import { useAppDispatch } from '../redux/configStore';
+import {
+  RootState,
+  useAppDispatch,
+  useAppSelector,
+} from '../redux/configStore';
 import { logoutAction } from '../redux/reducers/userReducer';
+import UserProfile from './UserProfile';
+import DialogModal from './DialogModal';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -23,6 +29,10 @@ const pages = [
 ];
 
 const Header = () => {
+  const { currentUserData } = useAppSelector(
+    (state: RootState) => state.userReducer
+  );
+
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
@@ -167,7 +177,10 @@ const Header = () => {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar
+                  alt={currentUserData?.name}
+                  src={currentUserData?.avatar}
+                />
               </IconButton>
             </Tooltip>
             <Menu
@@ -186,9 +199,18 @@ const Header = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              <MenuItem onClick={handleCloseUserMenu}>
-                <Typography textAlign="center">Profile</Typography>
-              </MenuItem>
+              <DialogModal
+                buttonOpen={
+                  <MenuItem>
+                    <Typography textAlign="center">Profile</Typography>
+                  </MenuItem>
+                }
+                children={<UserProfile />}
+                title="Your Profile"
+                popupId="userProfileDialog"
+                ariaLabel="user-profile-dialog-modal"
+              />
+
               <MenuItem onClick={handleLogout}>
                 <Typography textAlign="center">Logout</Typography>
               </MenuItem>

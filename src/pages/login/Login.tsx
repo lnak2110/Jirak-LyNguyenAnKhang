@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { LoginFormInputs } from '../../types/userTypes';
 import {
   RootState,
   useAppDispatch,
@@ -10,18 +11,17 @@ import {
 } from '../../redux/configStore';
 import { loginAPI } from '../../redux/reducers/userReducer';
 import Loading from '../../components/Loading';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
-import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import Link from '@mui/material/Link';
+import Paper from '@mui/material/Paper';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import Visibility from '@mui/icons-material/Visibility';
-import { LoginFormInputs } from '../../types/userTypes';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const schema = yup
   .object()
