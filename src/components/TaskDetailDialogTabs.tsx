@@ -1,0 +1,49 @@
+import { ReactNode, useState } from 'react';
+import AppBar from '@mui/material/AppBar';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+
+type TaskDetailDialogTabsProps = {
+  taskDetailTabContent: ReactNode;
+  commentsTabContent: ReactNode;
+};
+
+type TabsName = {
+  tabName: 'Task Detail' | 'Comments';
+};
+
+const TaskDetailDialogTabs = ({
+  taskDetailTabContent,
+  commentsTabContent,
+}: TaskDetailDialogTabsProps) => {
+  const [tabValue, setTabValue] = useState<TabsName>(
+    'Task Detail' as unknown as TabsName
+  );
+
+  const handleChange = (_event: React.SyntheticEvent, newValue: TabsName) => {
+    setTabValue(newValue);
+  };
+
+  return (
+    <>
+      <AppBar color="inherit" position="sticky">
+        <Tabs
+          value={tabValue}
+          onChange={handleChange}
+          centered
+          TabIndicatorProps={{
+            style: { transition: 'none' },
+          }}
+        >
+          <Tab value="Task Detail" label="Task Detail" />
+          <Tab value="Comments" label="Comments" />
+        </Tabs>
+      </AppBar>
+      {tabValue === ('Task Detail' as unknown as TabsName)
+        ? taskDetailTabContent
+        : commentsTabContent}
+    </>
+  );
+};
+
+export default TaskDetailDialogTabs;

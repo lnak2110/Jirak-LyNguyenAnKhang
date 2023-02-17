@@ -61,8 +61,20 @@ const CreateTaskDialogContent = ({
     dispatch(getAllPriorityAPI());
     dispatch(getAllTaskTypeAPI());
     dispatch(getProjectDetailAPI(projectId!));
-    dispatch(getTaskDetailAPI(taskId));
-  }, [dispatch, projectId, taskId]);
+  }, [dispatch, projectId]);
+
+  // Prevent MUI select warning invalid option
+  useEffect(() => {
+    if (allStatus.length && allPriority.length && allTaskType.length) {
+      dispatch(getTaskDetailAPI(taskId));
+    }
+  }, [
+    dispatch,
+    allStatus.length,
+    allPriority.length,
+    allTaskType.length,
+    taskId,
+  ]);
 
   const schema = yup
     .object()
