@@ -1,7 +1,13 @@
-import { createAsyncThunk, createSlice, isAnyOf } from '@reduxjs/toolkit';
+import {
+  createAsyncThunk,
+  createSlice,
+  isAnyOf,
+  PayloadAction,
+} from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
 import { router } from '../../App';
 import {
+  CurrentUserDataType,
   LoginFormInputs,
   RegisterFormInputs,
   UserAndProjectType,
@@ -40,15 +46,28 @@ export const registerAPI = createAsyncThunk(
 
 export const loginAPI = createAsyncThunk(
   'userReducer/login',
-  async (loginFormInputs: LoginFormInputs, { rejectWithValue }) => {
+  async (loginFormInputs: LoginFormInputs, { dispatch, rejectWithValue }) => {
     try {
       const result = await axiosAuth.post('/Users/signin', loginFormInputs);
       console.log(result);
       if (result?.status === 200) {
-        const { email, accessToken } = result.data.content;
+        const { id, avatar, name, phoneNumber, email, accessToken } =
+          result.data.content;
+        const currentUserData = {
+          id,
+          avatar,
+          name,
+          phoneNumber,
+          email,
+        };
+
+        setStore(process.env.REACT_APP_CURRENT_USER_DATA!, currentUserData);
         setStore(process.env.REACT_APP_USER_LOGIN!, { email, accessToken });
         setCookie(process.env.REACT_APP_ACCESS_TOKEN!, accessToken);
 
+        dispatch(
+          saveCurrentUserDataAction(currentUserData as CurrentUserDataType)
+        );
         toast.success(
           `Log in successfully! Welcome ${result.data?.content?.name}!`
         );
@@ -148,10 +167,13 @@ type InitialStateType = {
   isLoading: boolean;
   userLogin: UserLogin | null;
   users: UserDetailType[];
+  currentUserData: CurrentUserDataType | null;
 };
 
 const initialState = {
   isLoading: false,
+  currentUserData:
+    getStoreJson(process.env.REACT_APP_CURRENT_USER_DATA!) || null,
   userLogin: getStoreJson(process.env.REACT_APP_USER_LOGIN!) || null,
   users: [],
 } as InitialStateType;
@@ -162,8 +184,15 @@ const userReducer = createSlice({
   reducers: {
     logoutAction: (state) => {
       state.userLogin = null;
+      eraseStore(process.env.REACT_APP_CURRENT_USER_DATA!);
       eraseStore(process.env.REACT_APP_USER_LOGIN!);
       eraseCookie(process.env.REACT_APP_ACCESS_TOKEN!);
+    },
+    saveCurrentUserDataAction: (
+      state,
+      { payload }: PayloadAction<CurrentUserDataType>
+    ) => {
+      state.currentUserData = payload;
     },
   },
   extraReducers: (builder) => {
@@ -225,6 +254,6 @@ const userReducer = createSlice({
   },
 });
 
-export const { logoutAction } = userReducer.actions;
+export const { logoutAction, saveCurrentUserDataAction } = userReducer.actions;
 
 export default userReducer.reducer;

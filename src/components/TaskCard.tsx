@@ -1,7 +1,9 @@
 import { TaskDetailType } from '../types/taskTypes';
 import { UserAvatar } from './UsersAvatarGroup';
+import CommentsDialogContent from './CommentsDialogContent';
 import DialogModal from './DialogModal';
 import TaskDetailDialogContent from './TaskDetailDialogContent';
+import TaskDetailDialogTabs from './TaskDetailDialogTabs';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import BugReportIcon from '@mui/icons-material/BugReport';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -19,7 +21,6 @@ import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { Draggable } from '@hello-pangea/dnd';
-import TaskDetailDialogTabs from './TaskDetailDialogTabs';
 
 const priorityChips = [
   {
@@ -74,6 +75,11 @@ const TaskCard = ({ task, index }: TaskCardProps) => {
               ref={provided.innerRef}
             >
               <CardHeader
+                disableTypography
+                sx={{
+                  '& .MuiCardHeader-content': { overflow: 'hidden' },
+                  pb: 0,
+                }}
                 title={
                   <Tooltip title={task.taskName}>
                     <Typography
@@ -88,10 +94,6 @@ const TaskCard = ({ task, index }: TaskCardProps) => {
                     </Typography>
                   </Tooltip>
                 }
-                sx={{
-                  '& .MuiCardHeader-content': { overflow: 'hidden' },
-                  pb: 0,
-                }}
               />
               <CardContent
                 sx={{
@@ -154,7 +156,7 @@ const TaskCard = ({ task, index }: TaskCardProps) => {
             taskDetailTabContent={
               <TaskDetailDialogContent taskId={task.taskId} />
             }
-            commentsTabContent={'a'}
+            commentsTabContent={<CommentsDialogContent taskId={task.taskId} />}
           />
         </DialogModal>
       )}
