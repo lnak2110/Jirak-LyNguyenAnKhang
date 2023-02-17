@@ -15,6 +15,14 @@ export type UserLogin = {
   accessToken: string;
 };
 
+export type CurrentUserDataType = {
+  id: number;
+  avatar: string;
+  name: string;
+  phoneNumber: string;
+  email: string;
+};
+
 export type UserAndTaskType = {
   userId: number;
   taskId: number;

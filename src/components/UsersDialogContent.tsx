@@ -132,6 +132,7 @@ const UsersDialogContent = () => {
             {usersOutsideSearched?.map((user, index) => (
               <ListItem
                 key={user.userId}
+                alignItems="flex-start"
                 divider={index < usersOutsideSearched?.length - 1}
                 secondaryAction={
                   downSm ? (
