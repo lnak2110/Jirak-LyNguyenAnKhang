@@ -35,12 +35,12 @@ import {
 
 type CreateTaskDialogContentProps = {
   projectDetailWithTasks: ProjectDetailWithTasksType;
-  onCloseModal?: () => void;
+  handleCloseModal?: () => void;
 };
 
 const CreateTaskDialogContent = ({
   projectDetailWithTasks,
-  onCloseModal,
+  handleCloseModal,
 }: CreateTaskDialogContentProps) => {
   const [sliderKey, setSliderKey] = useState(0);
 
@@ -334,13 +334,13 @@ const CreateTaskDialogContent = ({
           >
             Create Task
           </Button>
-          <Button variant="outlined" fullWidth onClick={onCloseModal}>
+          <Button variant="outlined" fullWidth onClick={handleCloseModal}>
             Cancel
           </Button>
         </DialogActions>
       ) : (
         <DialogActions disableSpacing>
-          <Button variant="outlined" onClick={onCloseModal}>
+          <Button variant="outlined" onClick={handleCloseModal}>
             Cancel
           </Button>
           <Button

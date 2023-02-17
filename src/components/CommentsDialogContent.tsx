@@ -8,7 +8,6 @@ import {
   useAppSelector,
 } from '../redux/configStore';
 import { getAllCommentAPI } from '../redux/reducers/commentReducer';
-import { UserAvatar } from './UsersAvatarGroup';
 import ControllerEditor from './ControllerEditor';
 import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -67,12 +66,15 @@ const CommentsDialogContent = ({ taskId }: CommentsDialogContentProps) => {
               .slice(0)
               .reverse()
               .map((comment) => (
-                <ListItem key={comment.id}>
+                <ListItem key={comment.id} sx={{ display: 'block' }}>
                   <Card>
                     <CardHeader
                       disableTypography
                       sx={{
-                        '& .MuiCardHeader-content': { overflow: 'hidden' },
+                        '& .MuiCardHeader-content': {
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                        },
                       }}
                       avatar={
                         <Avatar
@@ -82,11 +84,13 @@ const CommentsDialogContent = ({ taskId }: CommentsDialogContentProps) => {
                       }
                       title={
                         <Tooltip title={comment.user.name}>
-                          <Typography noWrap>{comment.user.name}</Typography>
+                          <Typography noWrap sx={{ display: 'block' }}>
+                            {comment.user.name}
+                          </Typography>
                         </Tooltip>
                       }
                       action={
-                        <IconButton aria-label="settings">
+                        <IconButton aria-label="more actions">
                           <MoreVertIcon />
                         </IconButton>
                       }
@@ -107,6 +111,7 @@ const CommentsDialogContent = ({ taskId }: CommentsDialogContentProps) => {
         </Grid>
         <Grid item xs={12} md={6}>
           <Stack
+            component={'form'}
             spacing={2}
             sx={{
               p: 2,
@@ -115,30 +120,33 @@ const CommentsDialogContent = ({ taskId }: CommentsDialogContentProps) => {
               },
             }}
           >
-            <Stack direction="row" spacing={2}>
-              <UserAvatar
-                name={currentUserData?.name!}
-                avatar={currentUserData?.avatar!}
-              />
-              <Typography>{currentUserData?.name}</Typography>
-            </Stack>
-            <Box
-              component={'form'}
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'flex-end',
-              }}
+            <ControllerEditor
+              control={control}
+              name="comment"
+              placeholder="Leave a comment..."
+            />
+            <Stack
+              spacing={1}
+              direction={{ xs: 'column', sm: 'row' }}
+              sx={{ display: 'flex', justifyContent: 'space-between' }}
             >
-              <ControllerEditor
-                control={control}
-                name="comment"
-                placeholder="Leave a comment..."
-              />
-              <Button type="submit" variant="contained" sx={{ mt: 2 }}>
+              <Stack
+                direction="row"
+                spacing={2}
+                sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
+              >
+                <Avatar
+                  alt={currentUserData?.name!}
+                  src={currentUserData?.avatar!}
+                />
+                <Tooltip title={currentUserData?.name}>
+                  <Typography noWrap>{currentUserData?.name}</Typography>
+                </Tooltip>
+              </Stack>
+              <Button type="submit" variant="contained">
                 Send
               </Button>
-            </Box>
+            </Stack>
           </Stack>
         </Grid>
       </Grid>

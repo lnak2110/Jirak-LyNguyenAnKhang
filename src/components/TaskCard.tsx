@@ -59,9 +59,9 @@ const TaskCard = ({ task, index }: TaskCardProps) => {
       {(provided) => (
         <DialogModal
           key={task.taskId}
-          popupId={`dialog-task-${task.taskId}`}
+          popupId="taskDetailDialog"
           title={task.taskName}
-          ariaLabel="task-dialog-title"
+          ariaLabel="task-detail-dialog-title"
           preventCloseBackdrop
           buttonOpen={
             <Card

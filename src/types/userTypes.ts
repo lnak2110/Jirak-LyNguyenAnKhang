@@ -10,6 +10,10 @@ export type RegisterFormInputs = {
   password: string;
 };
 
+export type EditUserFormInputs = RegisterFormInputs & {
+  id: string;
+};
+
 export type UserLogin = {
   email: string;
   accessToken: string;

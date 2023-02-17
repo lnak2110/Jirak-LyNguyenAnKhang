@@ -79,7 +79,7 @@ const DialogModal = ({
           </IconButton>
         </DialogTitle>
         <Divider />
-        {cloneElement(children, { onCloseModal: dialogPopupState.close })}
+        {cloneElement(children, { handleCloseModal: dialogPopupState.close })}
       </Dialog>
     </>
   );
