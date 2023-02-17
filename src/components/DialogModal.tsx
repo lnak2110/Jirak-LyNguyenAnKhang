@@ -64,6 +64,7 @@ const DialogModal = ({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
+            py: 1,
           }}
         >
           <Box sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>

@@ -19,6 +19,7 @@ import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { Draggable } from '@hello-pangea/dnd';
+import TaskDetailDialogTabs from './TaskDetailDialogTabs';
 
 const priorityChips = [
   {
@@ -149,7 +150,12 @@ const TaskCard = ({ task, index }: TaskCardProps) => {
             </Card>
           }
         >
-          <TaskDetailDialogContent taskId={task.taskId} />
+          <TaskDetailDialogTabs
+            taskDetailTabContent={
+              <TaskDetailDialogContent taskId={task.taskId} />
+            }
+            commentsTabContent={'a'}
+          />
         </DialogModal>
       )}
     </Draggable>
