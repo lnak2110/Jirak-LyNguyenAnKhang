@@ -5,6 +5,7 @@ import {
   LoginFormInputs,
   RegisterFormInputs,
   UserAndProjectType,
+  UserAndTaskType,
   UserDetailType,
   UserLogin,
 } from '../../types/userTypes';
@@ -101,6 +102,17 @@ export const addUserToProjectAPI = createAsyncThunk(
       } else {
         toast.error('Something wrong happened!');
       }
+    }
+  }
+);
+
+export const deleteUserFromTaskAPI = createAsyncThunk(
+  'userReducer/deleteUserFromTaskAPI',
+  async (userAndTaskData: UserAndTaskType) => {
+    try {
+      await axiosAuth.post('/Project/removeUserFromTask', userAndTaskData);
+    } catch (error) {
+      console.log(error);
     }
   }
 );

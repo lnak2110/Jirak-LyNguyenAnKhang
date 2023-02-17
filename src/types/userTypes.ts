@@ -15,6 +15,11 @@ export type UserLogin = {
   accessToken: string;
 };
 
+export type UserAndTaskType = {
+  userId: number;
+  taskId: number;
+};
+
 export type UserAndProjectType = {
   userId: number;
   projectId: number;
