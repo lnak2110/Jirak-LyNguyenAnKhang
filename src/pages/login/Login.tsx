@@ -54,9 +54,8 @@ const Login = () => {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = async (data: LoginFormInputs) => {
-    console.log(data);
-    await dispatch(loginAPI(data));
+  const onSubmit = (data: LoginFormInputs) => {
+    dispatch(loginAPI(data));
   };
 
   const handleClickShowPassword = () => {

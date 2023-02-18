@@ -5,6 +5,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
+import { Breakpoint } from '@mui/material';
 import {
   bindDialog,
   bindTrigger,
@@ -18,6 +19,8 @@ type DialogModalProps = {
   title: string;
   ariaLabel: string;
   preventCloseBackdrop?: boolean;
+  maxWidthValue?: Breakpoint;
+  heightValue?: string;
 };
 
 const DialogModal = ({
@@ -27,6 +30,8 @@ const DialogModal = ({
   title,
   ariaLabel,
   preventCloseBackdrop,
+  maxWidthValue,
+  heightValue,
 }: DialogModalProps) => {
   const dialogPopupState = usePopupState({
     variant: 'dialog',
@@ -41,11 +46,15 @@ const DialogModal = ({
       <Dialog
         {...bindDialog(dialogPopupState)}
         PaperProps={{
-          sx: {
-            height: '90vh',
-          },
+          sx: heightValue
+            ? {
+                minHeight: heightValue,
+              }
+            : {
+                height: '90vh',
+              },
         }}
-        maxWidth="md"
+        maxWidth={maxWidthValue || 'md'}
         fullWidth
         aria-labelledby={ariaLabel}
         {...(preventCloseBackdrop && { disableEscapeKeyDown: true })}

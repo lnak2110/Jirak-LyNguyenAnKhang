@@ -75,10 +75,6 @@ const UserProfile = ({ handleCloseModal }: UserProfileProps) => {
   const {
     control,
     handleSubmit,
-    reset,
-    watch,
-    clearErrors,
-    setValue,
     formState: { isSubmitting },
   } = useForm<EditUserFormInputs>({
     defaultValues: initialValues,
@@ -87,8 +83,8 @@ const UserProfile = ({ handleCloseModal }: UserProfileProps) => {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = async (data: EditUserFormInputs) => {
-    await dispatch(editUserAPI(data));
+  const onSubmit = (data: EditUserFormInputs) => {
+    dispatch(editUserAPI(data));
   };
 
   return (

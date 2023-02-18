@@ -64,9 +64,8 @@ const Register = () => {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = async (data: RegisterFormInputs) => {
-    console.log(data);
-    await dispatch(registerAPI(data));
+  const onSubmit = (data: RegisterFormInputs) => {
+    dispatch(registerAPI(data));
   };
 
   const handleClickShowPassword = () => {

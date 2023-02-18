@@ -113,8 +113,8 @@ const CreateTaskDialogContent = ({
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = async (data: CreateTaskFormInputs) => {
-    await dispatch(createTaskAPI(data));
+  const onSubmit = (data: CreateTaskFormInputs) => {
+    dispatch(createTaskAPI(data));
   };
 
   const watchOriginalEstimate = +watch('originalEstimate');

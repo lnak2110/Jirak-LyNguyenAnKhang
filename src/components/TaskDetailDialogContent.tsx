@@ -127,8 +127,8 @@ const TaskDetailDialogContent = ({
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = async (data: UpdateTaskFormInputs) => {
-    await dispatch(updateTaskAPI(data));
+  const onSubmit = (data: UpdateTaskFormInputs) => {
+    dispatch(updateTaskAPI(data));
   };
 
   const watchOriginalEstimate = +watch('originalEstimate');
