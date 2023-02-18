@@ -5,18 +5,20 @@ import {
   useAppDispatch,
   useAppSelector,
 } from '../../redux/configStore';
+import { ProjectDetailType } from '../../types/projectTypes';
 import { getAllProjectsAPI } from '../../redux/reducers/projectReducer';
 import Loading from '../../components/Loading';
 import UsersAvatarGroup from '../../components/UsersAvatarGroup';
 import MUIDataGrid from '../../components/MUIDataGrid';
-import {
-  GridActionsCellItem,
-  GridColumns,
-  GridValueFormatterParams,
-} from '@mui/x-data-grid/';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import Link from '@mui/material/Link';
+import {
+  GridActionsCellItem,
+  GridColumns,
+  GridRowParams,
+  GridValueFormatterParams,
+} from '@mui/x-data-grid/';
 
 const Projects = () => {
   const { projects, isLoading } = useAppSelector(
@@ -89,7 +91,7 @@ const Projects = () => {
       description: 'Edit / Delete Project',
       minWidth: 70,
       flex: 0.5,
-      getActions: (params) => [
+      getActions: (params: GridRowParams<ProjectDetailType>) => [
         <GridActionsCellItem
           icon={<EditIcon />}
           label="Edit"

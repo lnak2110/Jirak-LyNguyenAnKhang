@@ -1,3 +1,4 @@
+import { KeyboardEvent } from 'react';
 import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
@@ -58,6 +59,9 @@ const ControllerAutocomplete = <T extends FieldValues, OptionType>({
                     required: value?.length === 0,
                   },
                 })}
+              onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
+                e.stopPropagation();
+              }}
             />
           )}
         />

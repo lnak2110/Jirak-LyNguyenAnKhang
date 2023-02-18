@@ -1,3 +1,4 @@
+import { KeyboardEvent } from 'react';
 import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -45,6 +46,9 @@ const ControllerEditor = <T extends FieldValues>({
             placeholder={placeholder}
             theme="snow"
             modules={module}
+            onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
+              e.stopPropagation();
+            }}
           />
           {error && (
             <Typography variant="body2" color="error">

@@ -1,3 +1,4 @@
+import { KeyboardEvent } from 'react';
 import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form';
 import TextField from '@mui/material/TextField';
 
@@ -51,6 +52,9 @@ const ControllerTextField = <T extends FieldValues>({
               shrink: true,
             },
           })}
+          onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
+            e.stopPropagation();
+          }}
         />
       )}
     />

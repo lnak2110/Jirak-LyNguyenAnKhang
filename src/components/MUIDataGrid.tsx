@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { theme } from '../App';
 import { Member } from '../types/projectTypes';
+import Container from '@mui/material/Container';
+import Tooltip from '@mui/material/Tooltip';
 import {
   DataGrid,
   GridColDef,
   GridMoreVertIcon,
   GridToolbar,
 } from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
-import Tooltip from '@mui/material/Tooltip';
 
 type ProjectsRowsType = {
   id: number;
@@ -50,8 +50,8 @@ const MUIDataGrid = ({
   const [pageSize, setPageSize] = useState(initialPageSizeNumber);
 
   return (
-    //  Prevent MUI useResizeContainer error
-    <Box sx={{ minWidth: '100px' }}>
+    //  minWidth: Prevent MUI useResizeContainer error
+    <Container sx={{ minWidth: '100px' }} maxWidth="lg">
       <DataGrid
         rows={rows ?? []}
         columns={columns}
@@ -82,7 +82,7 @@ const MUIDataGrid = ({
           },
         }}
       />
-    </Box>
+    </Container>
   );
 };
 

@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
 import {
   RootState,
   useAppDispatch,
@@ -17,45 +16,22 @@ import DialogContent from '@mui/material/DialogContent';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import { useMediaQuery } from '@mui/material';
-import { EditUserFormInputs } from '../types/userTypes';
+import { CurrentUserDataType, EditUserFormInputs } from '../types/userTypes';
 import Avatar from '@mui/material/Avatar';
 import ControllerPasswordTextField from './ControllerPasswordTextField';
-import { editCurrentUserProfileAPI } from '../redux/reducers/userReducer';
+import { editUserAPI } from '../redux/reducers/userReducer';
+import { editUserSchemaYup } from './UserProfile';
 
-export const editUserSchemaYup = yup
-  .object()
-  .shape({
-    name: yup.string().trim().required('Name cannot be blank!'),
-    email: yup
-      .string()
-      .trim()
-      .required('Email cannot be blank!')
-      .email('Email is invalid!'),
-    phoneNumber: yup
-      .string()
-      .trim()
-      .required('Phone number cannot be blank!')
-      .matches(
-        /((^(\+84|84|0|0084){1})(3|5|7|8|9))+([0-9]{8})$/,
-        'Phone number is not valid!'
-      ),
-    password: yup
-      .string()
-      .trim()
-      .required('Password cannot be blank!')
-      .min(4, 'Password must be between 4 - 10 characters!')
-      .max(10, 'Password must be between 4 - 10 characters!'),
-  })
-  .required();
-
-type UserProfileProps = {
+type EditUserDialogContentProps = {
+  userData: CurrentUserDataType;
   handleCloseModal?: () => void;
 };
 
-const UserProfile = ({ handleCloseModal }: UserProfileProps) => {
-  const { currentUserData, isLoading } = useAppSelector(
-    (state: RootState) => state.userReducer
-  );
+const EditUserDialogContent = ({
+  userData,
+  handleCloseModal,
+}: EditUserDialogContentProps) => {
+  const { isLoading } = useAppSelector((state: RootState) => state.userReducer);
 
   const dispatch = useAppDispatch();
 
@@ -63,13 +39,13 @@ const UserProfile = ({ handleCloseModal }: UserProfileProps) => {
 
   const initialValues = useMemo(
     () => ({
-      id: currentUserData?.id.toString() || '',
-      name: currentUserData?.name || '',
-      phoneNumber: currentUserData?.phoneNumber || '',
-      email: currentUserData?.email || '',
+      id: userData?.id.toString() || '',
+      name: userData?.name || '',
+      phoneNumber: userData?.phoneNumber || '',
+      email: userData?.email || '',
       password: '',
     }),
-    [currentUserData]
+    [userData]
   );
 
   const {
@@ -84,7 +60,7 @@ const UserProfile = ({ handleCloseModal }: UserProfileProps) => {
   });
 
   const onSubmit = (data: EditUserFormInputs) => {
-    dispatch(editCurrentUserProfileAPI(data));
+    dispatch(editUserAPI(data));
   };
 
   return (
@@ -107,8 +83,8 @@ const UserProfile = ({ handleCloseModal }: UserProfileProps) => {
               }}
             >
               <Avatar
-                alt={currentUserData?.name}
-                src={currentUserData?.avatar}
+                alt={userData?.name}
+                src={userData?.avatar}
                 sx={{ height: 64, width: 64 }}
               />
             </Grid>
@@ -189,4 +165,4 @@ const UserProfile = ({ handleCloseModal }: UserProfileProps) => {
   );
 };
 
-export default UserProfile;
+export default EditUserDialogContent;
