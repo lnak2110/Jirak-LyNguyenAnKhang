@@ -16,6 +16,7 @@ import {
 import { getProjectDetailAPI } from '../redux/reducers/projectReducer';
 import { removeAccents } from '../utils/config';
 import { theme } from '../App';
+import Loading from './Loading';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
@@ -35,7 +36,9 @@ import { useMediaQuery } from '@mui/material';
 import { useConfirm } from 'material-ui-confirm';
 
 const UsersDialogContent = () => {
-  const { users } = useAppSelector((state: RootState) => state.userReducer);
+  const { users, isLoading } = useAppSelector(
+    (state: RootState) => state.userReducer
+  );
   const { projectDetailWithTasks } = useAppSelector(
     (state: RootState) => state.projectReducer
   );
@@ -221,6 +224,7 @@ const UsersDialogContent = () => {
           </List>
         </Grid>
       </Grid>
+      {isLoading && <Loading />}
     </DialogContent>
   );
 };

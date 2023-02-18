@@ -85,8 +85,8 @@ const EditProject = () => {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = async (data: EditProjectFormInputs) => {
-    await dispatch(updateProjectAPI(data));
+  const onSubmit = (data: EditProjectFormInputs) => {
+    dispatch(updateProjectAPI(data));
   };
 
   const watchId = watch('id', initialValues.id);

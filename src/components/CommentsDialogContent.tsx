@@ -1,32 +1,47 @@
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import parse from 'html-react-parser';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 import { theme } from '../App';
+import { AddCommentToTaskType } from '../types/commentTypes';
 import {
   RootState,
   useAppDispatch,
   useAppSelector,
 } from '../redux/configStore';
-import { getAllCommentAPI } from '../redux/reducers/commentReducer';
+import {
+  addCommentToTaskAPI,
+  getAllCommentsAPI,
+  setFalseCommentFulfilledAction,
+} from '../redux/reducers/commentReducer';
+import CommentCard from './CommentCard';
 import ControllerEditor from './ControllerEditor';
-import IconButton from '@mui/material/IconButton';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
 import Avatar from '@mui/material/Avatar';
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
-import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
-import Collapse from '@mui/material/Collapse';
 import DialogContent from '@mui/material/DialogContent';
 import Grid from '@mui/material/Grid';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
+import Loading from './Loading';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { useMediaQuery } from '@mui/material';
+
+export const commentSchemaYup = yup
+  .object()
+  .shape({
+    contentComment: yup
+      .string()
+      .test('isCommentEmpty', 'Comment cannot be blank!', (comment) => {
+        if (comment?.replace(/<(.|\n)*?>/g, '').trim().length === 0) {
+          return false;
+        }
+        return true;
+      }),
+  })
+  .required();
 
 type CommentsDialogContentProps = {
   taskId: number;
@@ -36,22 +51,41 @@ const CommentsDialogContent = ({ taskId }: CommentsDialogContentProps) => {
   const { currentUserData } = useAppSelector(
     (state: RootState) => state.userReducer
   );
-  const { allCommentsInTask } = useAppSelector(
+  const { allCommentsInTask, commentFulfilled, isLoading } = useAppSelector(
     (state: RootState) => state.commentReducer
   );
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(getAllCommentAPI(taskId));
+    dispatch(getAllCommentsAPI(taskId));
   }, [dispatch, taskId]);
 
-  const { control, handleSubmit } = useForm({
+  const up300 = useMediaQuery(theme.breakpoints.up(300));
+
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { isSubmitting },
+  } = useForm<AddCommentToTaskType>({
     defaultValues: {
-      comment: '',
+      taskId: taskId || 0,
+      contentComment: '',
     },
+    mode: 'onSubmit',
+    resolver: yupResolver(commentSchemaYup),
   });
 
-  const up300 = useMediaQuery(theme.breakpoints.up(300));
+  useEffect(() => {
+    if (commentFulfilled) {
+      reset();
+      dispatch(setFalseCommentFulfilledAction());
+    }
+  }, [dispatch, reset, commentFulfilled]);
+
+  const onSubmit = (data: AddCommentToTaskType) => {
+    dispatch(addCommentToTaskAPI(data));
+  };
 
   return (
     <DialogContent>
@@ -61,57 +95,38 @@ const CommentsDialogContent = ({ taskId }: CommentsDialogContentProps) => {
         flexDirection={{ xs: 'column-reverse', md: 'row' }}
       >
         <Grid item xs={12} md={6}>
-          <List>
-            {allCommentsInTask
-              .slice(0)
-              .reverse()
-              .map((comment) => (
-                <ListItem key={comment.id} sx={{ display: 'block' }}>
-                  <Card>
-                    <CardHeader
-                      disableTypography
-                      sx={{
-                        '& .MuiCardHeader-content': {
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                        },
-                      }}
-                      avatar={
-                        <Avatar
-                          alt={comment.user.name}
-                          src={comment.user.avatar}
-                        />
-                      }
-                      title={
-                        <Tooltip title={comment.user.name}>
-                          <Typography noWrap sx={{ display: 'block' }}>
-                            {comment.user.name}
-                          </Typography>
-                        </Tooltip>
-                      }
-                      action={
-                        <IconButton aria-label="more actions">
-                          <MoreVertIcon />
-                        </IconButton>
-                      }
-                    />
-                    <CardContent sx={{ '&.MuiCardContent-root': { py: 0 } }}>
-                      <Typography
-                        component={'div'}
-                        variant="body2"
-                        color="text.secondary"
-                      >
-                        {parse(comment.contentComment)}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </ListItem>
-              ))}
-          </List>
+          {allCommentsInTask.length ? (
+            <List>
+              {allCommentsInTask
+                .slice(0)
+                .reverse()
+                .map((comment) => (
+                  <ListItem key={comment.id} sx={{ display: 'block' }}>
+                    <CommentCard comment={comment} />
+                  </ListItem>
+                ))}
+            </List>
+          ) : (
+            <Typography
+              variant="h5"
+              color="text.secondary"
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: 1,
+                mt: 2,
+              }}
+            >
+              <ModeCommentOutlinedIcon fontSize="inherit" />
+              No comment yet...
+            </Typography>
+          )}
         </Grid>
         <Grid item xs={12} md={6}>
           <Stack
             component={'form'}
+            onSubmit={handleSubmit(onSubmit)}
             spacing={2}
             sx={{
               p: 2,
@@ -122,7 +137,7 @@ const CommentsDialogContent = ({ taskId }: CommentsDialogContentProps) => {
           >
             <ControllerEditor
               control={control}
-              name="comment"
+              name="contentComment"
               placeholder="Leave a comment..."
             />
             <Stack
@@ -143,13 +158,14 @@ const CommentsDialogContent = ({ taskId }: CommentsDialogContentProps) => {
                   <Typography noWrap>{currentUserData?.name}</Typography>
                 </Tooltip>
               </Stack>
-              <Button type="submit" variant="contained">
+              <Button type="submit" variant="contained" disabled={isSubmitting}>
                 Send
               </Button>
             </Stack>
           </Stack>
         </Grid>
       </Grid>
+      {isLoading && <Loading />}
     </DialogContent>
   );
 };

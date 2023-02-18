@@ -70,8 +70,8 @@ const CreateProject = () => {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = async (data: CreateProjectFormInputs) => {
-    await dispatch(createProjectAPI(data));
+  const onSubmit = (data: CreateProjectFormInputs) => {
+    dispatch(createProjectAPI(data));
   };
 
   useEffect(() => {

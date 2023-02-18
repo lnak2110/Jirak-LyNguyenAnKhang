@@ -87,7 +87,7 @@ const ProjectForm = <T extends FieldValues>({
                 >
                   Create project
                 </Button>
-                <Button variant="outlined" fullWidth>
+                <Button variant="outlined" fullWidth onClick={() => reset()}>
                   Reset
                 </Button>
               </Grid>
@@ -101,12 +101,7 @@ const ProjectForm = <T extends FieldValues>({
                 >
                   {`${formType === 'edit' ? 'Update' : 'Create'} Project`}
                 </Button>
-                <Button
-                  onClick={() => {
-                    reset();
-                  }}
-                  variant="outlined"
-                >
+                <Button variant="outlined" onClick={() => reset()}>
                   Reset
                 </Button>
               </Grid>

@@ -205,12 +205,13 @@ const Header = () => {
                     <Typography textAlign="center">Profile</Typography>
                   </MenuItem>
                 }
-                children={<UserProfile />}
                 title="Your Profile"
                 popupId="userProfileDialog"
                 ariaLabel="user-profile-dialog-modal"
-              />
-
+                preventCloseBackdrop
+              >
+                <UserProfile />
+              </DialogModal>
               <MenuItem onClick={handleLogout}>
                 <Typography textAlign="center">Logout</Typography>
               </MenuItem>

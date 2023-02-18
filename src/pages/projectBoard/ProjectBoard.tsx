@@ -25,7 +25,6 @@ import { useMediaQuery } from '@mui/material';
 import { DragDropContext, DropResult } from '@hello-pangea/dnd';
 
 const ProjectBoard = () => {
-  const { users } = useAppSelector((state: RootState) => state.userReducer);
   const { projectDetailWithTasks } = useAppSelector(
     (state: RootState) => state.projectReducer
   );

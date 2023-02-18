@@ -1,11 +1,23 @@
 import { Member } from './projectTypes';
 
-export type CommentInTask = {
+export type AddCommentToTaskType = {
+  taskId: number;
+  contentComment: string;
+};
+
+export type CommentInTaskType = AddCommentToTaskType & {
   user: Member;
   id: number;
   userId: number;
-  taskId: number;
-  contentComment: string;
   deleted?: boolean;
   alias?: string;
+};
+
+export type EditCommentType = AddCommentToTaskType & {
+  id: number;
+};
+
+export type DeleteCommentType = {
+  idComment: number;
+  taskId: number;
 };
