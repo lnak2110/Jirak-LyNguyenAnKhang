@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { KeyboardEvent, useState } from 'react';
 import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -52,6 +52,9 @@ const ControllerPasswordTextField = <T extends FieldValues>({
                 </IconButton>
               </InputAdornment>
             ),
+          }}
+          onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
+            e.stopPropagation();
           }}
         />
       )}
