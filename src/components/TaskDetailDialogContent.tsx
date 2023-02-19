@@ -9,6 +9,14 @@ import {
   useAppDispatch,
   useAppSelector,
 } from '../redux/configStore';
+import {
+  getAllPriorityAPI,
+  getAllStatusAPI,
+  getAllTaskTypeAPI,
+  getTaskDetailAPI,
+  updateTaskAPI,
+} from '../redux/reducers/taskReducer';
+import { theme } from '../App';
 import { UpdateTaskFormInputs } from '../types/taskTypes';
 import { getProjectDetailAPI } from '../redux/reducers/projectReducer';
 import ControllerAutocomplete from './ControllerAutocomplete';
@@ -16,7 +24,7 @@ import ControllerEditor from './ControllerEditor';
 import ControllerSelect from './ControllerSelect';
 import ControllerSlider from './ControllerSlider';
 import ControllerTextField from './ControllerTextField';
-import { theme } from '../App';
+import Loading from './Loading';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import DialogActions from '@mui/material/DialogActions';
@@ -25,13 +33,6 @@ import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { useMediaQuery } from '@mui/material';
-import {
-  getAllPriorityAPI,
-  getAllStatusAPI,
-  getAllTaskTypeAPI,
-  getTaskDetailAPI,
-  updateTaskAPI,
-} from '../redux/reducers/taskReducer';
 
 type TaskDetailDialogContentProps = {
   taskId: number;
@@ -42,12 +43,15 @@ const TaskDetailDialogContent = ({
   taskId,
   handleCloseModal,
 }: TaskDetailDialogContentProps) => {
-  const { allStatus, allPriority, allTaskType, taskDetail } = useAppSelector(
-    (state: RootState) => state.taskReducer
-  );
-  const { projectDetailWithTasks } = useAppSelector(
-    (state: RootState) => state.projectReducer
-  );
+  const {
+    allStatus,
+    allPriority,
+    allTaskType,
+    taskDetail,
+    isLoading: isLoadingTask,
+  } = useAppSelector((state: RootState) => state.taskReducer);
+  const { projectDetailWithTasks, isLoading: isLoadingProject } =
+    useAppSelector((state: RootState) => state.projectReducer);
 
   const dispatch = useAppDispatch();
 
@@ -183,7 +187,7 @@ const TaskDetailDialogContent = ({
     <>
       <DialogContent>
         <Box
-          id="create-task-form"
+          id="edit-task-form"
           component="form"
           onSubmit={handleSubmit(onSubmit)}
         >
@@ -313,41 +317,37 @@ const TaskDetailDialogContent = ({
         </Box>
       </DialogContent>
       <Divider />
-      {downSm ? (
-        <DialogActions
-          disableSpacing
-          sx={{ display: 'flex', flexDirection: 'column' }}
+      <DialogActions
+        disableSpacing
+        sx={{
+          display: 'flex',
+          flexDirection: { xs: 'column-reverse', sm: 'row' },
+          px: 3,
+        }}
+      >
+        <Button
+          variant="outlined"
+          fullWidth={downSm}
+          onClick={handleCloseModal}
         >
-          <Button
-            type="submit"
-            form="create-task-form"
-            variant="contained"
-            fullWidth
-            sx={{ mb: 1 }}
-            disabled={isSubmitting}
-          >
-            Update Task
-          </Button>
-          <Button variant="outlined" fullWidth onClick={handleCloseModal}>
-            Cancel
-          </Button>
-        </DialogActions>
-      ) : (
-        <DialogActions disableSpacing>
-          <Button variant="outlined" onClick={handleCloseModal}>
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            form="create-task-form"
-            variant="contained"
-            sx={{ ml: 2, mr: 4 }}
-            disabled={isSubmitting}
-          >
-            Update Task
-          </Button>
-        </DialogActions>
-      )}
+          Cancel
+        </Button>
+        <Button
+          type="submit"
+          form="edit-task-form"
+          variant="contained"
+          fullWidth={downSm}
+          sx={{
+            mb: { xs: 1, sm: 0 },
+            ml: { sm: 2 },
+            mr: { md: 2 },
+          }}
+          disabled={isSubmitting}
+        >
+          Update Task
+        </Button>
+      </DialogActions>
+      {(isLoadingTask || isLoadingProject) && <Loading />}
     </>
   );
 };

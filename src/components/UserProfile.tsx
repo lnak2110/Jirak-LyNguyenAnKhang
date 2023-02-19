@@ -7,20 +7,20 @@ import {
   useAppDispatch,
   useAppSelector,
 } from '../redux/configStore';
-import ControllerTextField from './ControllerTextField';
+import { EditUserFormInputs } from '../types/userTypes';
+import { editCurrentUserProfileAPI } from '../redux/reducers/userReducer';
 import { theme } from '../App';
-import Loading from './Loading';
+import ControllerTextField from './ControllerTextField';
+import ControllerPasswordTextField from './ControllerPasswordTextField';
+import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
+import Loading from './Loading';
 import { useMediaQuery } from '@mui/material';
-import { EditUserFormInputs } from '../types/userTypes';
-import Avatar from '@mui/material/Avatar';
-import ControllerPasswordTextField from './ControllerPasswordTextField';
-import { editCurrentUserProfileAPI } from '../redux/reducers/userReducer';
 
 export const editUserSchemaYup = yup
   .object()
@@ -149,41 +149,36 @@ const UserProfile = ({ handleCloseModal }: UserProfileProps) => {
         </Box>
       </DialogContent>
       <Divider />
-      {downSm ? (
-        <DialogActions
-          disableSpacing
-          sx={{ display: 'flex', flexDirection: 'column' }}
+      <DialogActions
+        disableSpacing
+        sx={{
+          display: 'flex',
+          flexDirection: { xs: 'column-reverse', sm: 'row' },
+          px: 3,
+        }}
+      >
+        <Button
+          variant="outlined"
+          fullWidth={downSm}
+          onClick={handleCloseModal}
         >
-          <Button
-            type="submit"
-            form="edit-user-info-form"
-            variant="contained"
-            fullWidth
-            sx={{ mb: 1 }}
-            disabled={isSubmitting}
-          >
-            Update Information
-          </Button>
-          <Button variant="outlined" fullWidth onClick={handleCloseModal}>
-            Cancel
-          </Button>
-        </DialogActions>
-      ) : (
-        <DialogActions disableSpacing>
-          <Button variant="outlined" onClick={handleCloseModal}>
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            form="edit-user-info-form"
-            variant="contained"
-            sx={{ ml: 2, mr: 4 }}
-            disabled={isSubmitting}
-          >
-            Update Information
-          </Button>
-        </DialogActions>
-      )}
+          Cancel
+        </Button>
+        <Button
+          type="submit"
+          form="edit-user-info-form"
+          variant="contained"
+          fullWidth={downSm}
+          sx={{
+            mb: { xs: 1, sm: 0 },
+            ml: { sm: 2 },
+            mr: { md: 2 },
+          }}
+          disabled={isSubmitting}
+        >
+          Update Information
+        </Button>
+      </DialogActions>
       {isLoading && <Loading />}
     </>
   );

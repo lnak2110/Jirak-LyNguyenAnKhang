@@ -65,6 +65,9 @@ export const createProjectAPI = createAsyncThunk(
       if (error.response?.status === 500) {
         toast.error('Project name is already existed!');
         return rejectWithValue('Project name is already existed!');
+      } else {
+        toast.error('Something wrong happened!');
+        return rejectWithValue('Something wrong happened!');
       }
     }
   }
@@ -83,7 +86,7 @@ export const getProjectDetailAPI = createAsyncThunk(
       }
     } catch (error: any) {
       console.log(error);
-      // Axios network error???
+      // Axios network / Server error???
       if (error) {
         toast.error('Something wrong happened!');
         return rejectWithValue('Something wrong happened!');
@@ -94,7 +97,10 @@ export const getProjectDetailAPI = createAsyncThunk(
 
 export const updateProjectAPI = createAsyncThunk(
   'projectReducer/updateProjectAPI',
-  async (editProjectFormInputs: EditProjectFormInputs, thunkAPI) => {
+  async (
+    editProjectFormInputs: EditProjectFormInputs,
+    { dispatch, rejectWithValue }
+  ) => {
     try {
       // Change structure of the data to be sent
       const { category, ...restFields } = editProjectFormInputs;
@@ -110,14 +116,49 @@ export const updateProjectAPI = createAsyncThunk(
       console.log(result);
 
       if (result?.status === 200) {
-        toast.success('Update a project successfully!');
         // API from backend send only categoryId (number)
-        thunkAPI.dispatch(getProjectDetailAPI(result.data.content.id));
+        await dispatch(getProjectDetailAPI(result.data.content.id));
+        toast.success('Update a project successfully!');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
       if (error) {
-        toast.error('Something wrong happened!');
+        if (error.response?.status === 403) {
+          toast.error('You are not the creator of this project!');
+          return rejectWithValue('You are not the creator of this project!');
+        } else {
+          toast.error('Something wrong happened!');
+          return rejectWithValue('Something wrong happened!');
+        }
+      }
+    }
+  }
+);
+
+export const deleteProjectAPI = createAsyncThunk(
+  'projectReducer/deleteProjectAPI',
+  async (projectId: number, { dispatch, rejectWithValue }) => {
+    try {
+      const result = await axiosAuth.delete(
+        `/Project/deleteProject?projectId=${projectId}`
+      );
+
+      console.log(result);
+
+      if (result?.status === 200) {
+        await dispatch(getAllProjectsAPI());
+        toast.success('Delete a project successfully!');
+      }
+    } catch (error: any) {
+      console.log(error);
+      if (error) {
+        if (error.response?.status === 403) {
+          toast.error('You are not the creator of this project!');
+          return rejectWithValue('You are not the creator of this project!');
+        } else {
+          toast.error('Something wrong happened!');
+          return rejectWithValue('Something wrong happened!');
+        }
       }
     }
   }

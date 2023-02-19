@@ -98,7 +98,11 @@ export const createTaskAPI = createAsyncThunk(
 export const updateStatusTaskAPI = createAsyncThunk(
   'taskReducer/updateStatusTaskAPI',
   async (
-    updateStatusData: { taskId: number; statusId: string; projectId: string },
+    updateStatusData: {
+      taskId: number;
+      statusId: string;
+      projectId: string;
+    },
     { dispatch }
   ) => {
     const { projectId, ...restUpdateStatusData } = updateStatusData;
@@ -161,8 +165,8 @@ export const updateTaskAPI = createAsyncThunk(
       );
       console.log(result);
       if (result?.status === 200) {
+        await dispatch(getProjectDetailAPI(updateTaskFormInputs.projectId));
         toast.success('Update a task successfully!');
-        dispatch(getProjectDetailAPI(updateTaskFormInputs.projectId));
       }
     } catch (error: any) {
       console.log(error);
@@ -172,8 +176,39 @@ export const updateTaskAPI = createAsyncThunk(
           return rejectWithValue('You are not the creator of this project!');
         } else {
           toast.error('Something wrong happened!');
-          return rejectWithValue('You are not the creator of this project!');
+          return rejectWithValue('Something wrong happened!');
         }
+      }
+    }
+  }
+);
+
+export const deleteTaskAPI = createAsyncThunk(
+  'taskReducer/deleteTaskAPI',
+  async (
+    deleteTaskData: {
+      taskId: number;
+      projectId: number;
+    },
+    { dispatch, rejectWithValue }
+  ) => {
+    try {
+      const result = await axiosAuth.delete(
+        `/Project/removeTask?taskId=${deleteTaskData.taskId}`
+      );
+
+      if (result?.status === 200) {
+        await dispatch(getProjectDetailAPI(deleteTaskData.projectId));
+        toast.success('Delete a task successfully!');
+      }
+    } catch (error: any) {
+      console.log(error);
+      if (error.response?.status === 403) {
+        toast.error('You are not the creator of this project!');
+        return rejectWithValue('You are not the creator of this project!');
+      } else {
+        toast.error('Something wrong happened!');
+        return rejectWithValue('Something wrong happened!');
       }
     }
   }

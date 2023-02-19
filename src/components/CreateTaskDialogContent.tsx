@@ -8,6 +8,7 @@ import {
   useAppDispatch,
   useAppSelector,
 } from '../redux/configStore';
+import { theme } from '../App';
 import { CreateTaskFormInputs } from '../types/taskTypes';
 import { ProjectDetailWithTasksType } from '../types/projectTypes';
 import ControllerAutocomplete from './ControllerAutocomplete';
@@ -15,7 +16,7 @@ import ControllerEditor from './ControllerEditor';
 import ControllerSelect from './ControllerSelect';
 import ControllerSlider from './ControllerSlider';
 import ControllerTextField from './ControllerTextField';
-import { theme } from '../App';
+import Loading from './Loading';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import DialogActions from '@mui/material/DialogActions';
@@ -44,9 +45,8 @@ const CreateTaskDialogContent = ({
 }: CreateTaskDialogContentProps) => {
   const [sliderKey, setSliderKey] = useState(0);
 
-  const { taskFulfilled, allStatus, allPriority, allTaskType } = useAppSelector(
-    (state: RootState) => state.taskReducer
-  );
+  const { taskFulfilled, allStatus, allPriority, allTaskType, isLoading } =
+    useAppSelector((state: RootState) => state.taskReducer);
 
   const dispatch = useAppDispatch();
 
@@ -319,41 +319,37 @@ const CreateTaskDialogContent = ({
         </Box>
       </DialogContent>
       <Divider />
-      {downSm ? (
-        <DialogActions
-          disableSpacing
-          sx={{ display: 'flex', flexDirection: 'column' }}
+      <DialogActions
+        disableSpacing
+        sx={{
+          display: 'flex',
+          flexDirection: { xs: 'column-reverse', sm: 'row' },
+          px: 3,
+        }}
+      >
+        <Button
+          variant="outlined"
+          fullWidth={downSm}
+          onClick={handleCloseModal}
         >
-          <Button
-            type="submit"
-            form="create-task-form"
-            variant="contained"
-            fullWidth
-            sx={{ mb: 1 }}
-            disabled={isSubmitting}
-          >
-            Create Task
-          </Button>
-          <Button variant="outlined" fullWidth onClick={handleCloseModal}>
-            Cancel
-          </Button>
-        </DialogActions>
-      ) : (
-        <DialogActions disableSpacing>
-          <Button variant="outlined" onClick={handleCloseModal}>
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            form="create-task-form"
-            variant="contained"
-            sx={{ ml: 2, mr: 4 }}
-            disabled={isSubmitting}
-          >
-            Create Task
-          </Button>
-        </DialogActions>
-      )}
+          Cancel
+        </Button>
+        <Button
+          type="submit"
+          form="create-task-form"
+          variant="contained"
+          fullWidth={downSm}
+          sx={{
+            mb: { xs: 1, sm: 0 },
+            ml: { sm: 2 },
+            mr: { md: 2 },
+          }}
+          disabled={isSubmitting}
+        >
+          Create Task
+        </Button>
+      </DialogActions>
+      {isLoading && <Loading />}
     </>
   );
 };
