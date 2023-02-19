@@ -291,6 +291,29 @@ export const deleteUserAPI = createAsyncThunk(
   }
 );
 
+export const loginFacebookAPI = createAsyncThunk(
+  'userReducer/loginFacebookAPI',
+  async (facebookToken: string, { dispatch, rejectWithValue }) => {
+    try {
+      const result = await axiosAuth.post(
+        '/Users/facebookLogin',
+        facebookToken
+      );
+      console.log(result);
+      // if (result?.status === 200) {
+      //   await dispatch(getAllUsersAPI());
+      //   toast.success('Delete user successfully!');
+      // }
+    } catch (error) {
+      console.log(error);
+      if (error) {
+        toast.error('Something wrong happened!');
+        return rejectWithValue('Something wrong happened!');
+      }
+    }
+  }
+);
+
 type InitialStateType = {
   isLoading: boolean;
   userLogin: UserLogin | null;

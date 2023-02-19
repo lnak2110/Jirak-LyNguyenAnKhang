@@ -12,15 +12,15 @@ import { Droppable } from '@hello-pangea/dnd';
 
 const statusChips = [
   {
-    color: 'info',
+    color: 'primary',
     icon: <ReceiptLongIcon />,
   },
   {
-    color: 'warning',
+    color: 'secondary',
     icon: <NextPlanIcon />,
   },
   {
-    color: 'error',
+    color: 'warning',
     icon: <EngineeringIcon />,
   },
   {
@@ -46,6 +46,7 @@ const BoardCardContainer = ({ listTask, index }: BoardCardContainerProps) => {
           label={listTask.statusName}
           color={statusChips[index].color}
           icon={statusChips[index].icon}
+          sx={{ fontWeight: 500 }}
         />
         <Droppable droppableId={listTask.statusId}>
           {(provided) => (
