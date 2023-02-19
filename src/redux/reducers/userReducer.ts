@@ -38,9 +38,12 @@ export const registerAPI = createAsyncThunk(
         toast.success('Register successfully! Please log in to continue.');
       }
     } catch (error: any) {
+      console.log(error);
       if (error.response?.status === 400) {
         toast.error('Email is already existed!');
         return rejectWithValue('Email is already existed!');
+      } else {
+        toast.error('Something wrong happened!');
       }
     }
   }
@@ -80,6 +83,8 @@ export const loginAPI = createAsyncThunk(
       if (error.response?.status === 400) {
         toast.error('Wrong email or password!');
         return rejectWithValue('Wrong email or password!');
+      } else {
+        toast.error('Something wrong happened!');
       }
     }
   }
@@ -239,12 +244,20 @@ export const editUserAPI = createAsyncThunk(
         const { userFound } = state.userReducer as {
           userFound: UserDetailType;
         };
-        dispatch(
-          saveCurrentUserDataAction({
-            ...userFound,
-            id: userFound.userId,
-          })
-        );
+        const { currentUserData } = state.userReducer as {
+          currentUserData: CurrentUserDataType;
+        };
+
+        // Update current user if edited
+        if (userFound.userId === currentUserData.id) {
+          dispatch(
+            saveCurrentUserDataAction({
+              ...userFound,
+              id: userFound.userId,
+            })
+          );
+        }
+
         await dispatch(getAllUsersAPI());
         toast.success('Update user information successfully!');
       }

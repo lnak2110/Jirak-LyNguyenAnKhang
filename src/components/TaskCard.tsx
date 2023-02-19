@@ -1,4 +1,5 @@
 import { TaskDetailType } from '../types/taskTypes';
+import { useAppDispatch } from '../redux/configStore';
 import { UserAvatar } from './UsersAvatarGroup';
 import CommentsDialogContent from './CommentsDialogContent';
 import DialogModal from './DialogModal';
@@ -6,6 +7,7 @@ import TaskDetailDialogContent from './TaskDetailDialogContent';
 import TaskDetailDialogTabs from './TaskDetailDialogTabs';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import BugReportIcon from '@mui/icons-material/BugReport';
+import DeleteIcon from '@mui/icons-material/Delete';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -17,10 +19,13 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Chip from '@mui/material/Chip';
+import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { Draggable } from '@hello-pangea/dnd';
+import { useConfirm } from 'material-ui-confirm';
+import { deleteTaskAPI } from '../redux/reducers/taskReducer';
 
 const priorityChips = [
   {
@@ -54,6 +59,25 @@ type TaskCardProps = {
 };
 
 const TaskCard = ({ task, index }: TaskCardProps) => {
+  const dispatch = useAppDispatch();
+
+  const confirm = useConfirm();
+
+  const handleDeleteTask = () => {
+    confirm({
+      title: `Delete task "${task.taskName}"?`,
+    })
+      .then(() => {
+        dispatch(
+          deleteTaskAPI({
+            taskId: task.taskId,
+            projectId: task.projectId,
+          })
+        );
+      })
+      .catch(() => ({}));
+  };
+
   return (
     <Draggable draggableId={task.taskId.toString()} index={index}>
       {(provided) => (
@@ -92,6 +116,20 @@ const TaskCard = ({ task, index }: TaskCardProps) => {
                     >
                       {task.taskName}
                     </Typography>
+                  </Tooltip>
+                }
+                action={
+                  <Tooltip title="Delete">
+                    <IconButton
+                      aria-label="delete"
+                      size="small"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteTask();
+                      }}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
                   </Tooltip>
                 }
               />
