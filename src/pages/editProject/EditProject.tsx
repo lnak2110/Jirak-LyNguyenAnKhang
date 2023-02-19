@@ -17,15 +17,15 @@ import {
   getProjectDetailAPI,
   updateProjectAPI,
 } from '../../redux/reducers/projectReducer';
-import ProjectForm from '../../components/ProjectForm';
 import ControllerAutocomplete from '../../components/ControllerAutocomplete';
 import ControllerEditor from '../../components/ControllerEditor';
 import ControllerTextField from '../../components/ControllerTextField';
+import Loading from '../../components/Loading';
+import ProjectForm from '../../components/ProjectForm';
 
 const EditProject = () => {
-  const { projectCategories, projectDetailWithTasks } = useAppSelector(
-    (state: RootState) => state.projectReducer
-  );
+  const { projectCategories, projectDetailWithTasks, isLoading } =
+    useAppSelector((state: RootState) => state.projectReducer);
   const dispatch = useAppDispatch();
 
   const { projectId } = useParams();
@@ -116,41 +116,44 @@ const EditProject = () => {
   }));
 
   return (
-    <ProjectForm
-      handleSubmit={handleSubmit}
-      onSubmit={onSubmit}
-      formType="edit"
-      isSubmitting={isSubmitting}
-      reset={reset}
-      formFieldElements={[
-        <ControllerTextField
-          control={control}
-          name="projectName"
-          label="Project Name"
-        />,
-        <ControllerAutocomplete
-          control={control}
-          name="category"
-          label="Project Category"
-          placeholder="Choose a category for your project..."
-          options={optionsCategory}
-          optionLabel="name"
-          equalField="id"
-        />,
-        <ControllerEditor
-          control={control}
-          name="description"
-          placeholder="Describe the project..."
-        />,
-        <ControllerTextField
-          control={control}
-          name="id"
-          label="Project ID (read only)"
-          type="number"
-          readonly
-        />,
-      ]}
-    />
+    <>
+      <ProjectForm
+        handleSubmit={handleSubmit}
+        onSubmit={onSubmit}
+        formType="edit"
+        isSubmitting={isSubmitting}
+        reset={reset}
+        formFieldElements={[
+          <ControllerTextField
+            control={control}
+            name="projectName"
+            label="Project Name"
+          />,
+          <ControllerAutocomplete
+            control={control}
+            name="category"
+            label="Project Category"
+            placeholder="Choose a category for your project..."
+            options={optionsCategory}
+            optionLabel="name"
+            equalField="id"
+          />,
+          <ControllerEditor
+            control={control}
+            name="description"
+            placeholder="Describe the project..."
+          />,
+          <ControllerTextField
+            control={control}
+            name="id"
+            label="Project ID (read only)"
+            type="number"
+            readonly
+          />,
+        ]}
+      />
+      {isLoading && <Loading />}
+    </>
   );
 };
 
