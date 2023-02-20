@@ -112,6 +112,7 @@ const TaskCard = ({ task, index }: TaskCardProps) => {
                         maxWidth: '100%',
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
                       }}
                     >
                       {task.taskName}
