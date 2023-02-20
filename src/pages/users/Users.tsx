@@ -49,6 +49,7 @@ const RowActionsMenu = ({ user }: { user: UserDetailType }) => {
   const handleDeleteUser = (user: UserDetailType) => {
     confirm({
       title: `Delete user "${user.name}"?`,
+      titleProps: { sx: { wordWrap: 'break-word' } },
     })
       .then(() => {
         dispatch(deleteUserAPI(user.userId));

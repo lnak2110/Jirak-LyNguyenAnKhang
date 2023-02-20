@@ -66,6 +66,7 @@ const TaskCard = ({ task, index }: TaskCardProps) => {
   const handleDeleteTask = () => {
     confirm({
       title: `Delete task "${task.taskName}"?`,
+      titleProps: { sx: { wordWrap: 'break-word' } },
     })
       .then(() => {
         dispatch(
