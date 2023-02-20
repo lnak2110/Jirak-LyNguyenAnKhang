@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { theme } from '../App';
 import { Member } from '../types/projectTypes';
-import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
 import {
   DataGrid,
@@ -51,7 +51,7 @@ const MUIDataGrid = ({
 
   return (
     //  minWidth: Prevent MUI useResizeContainer error
-    <Container sx={{ minWidth: '100px' }} maxWidth="lg">
+    <Box sx={{ minWidth: '100px' }}>
       <DataGrid
         rows={rows ?? []}
         columns={columns}
@@ -82,7 +82,7 @@ const MUIDataGrid = ({
           },
         }}
       />
-    </Container>
+    </Box>
   );
 };
 
