@@ -49,6 +49,7 @@ const RowActionsMenu = ({ project }: { project: ProjectDetailType }) => {
   const handleDeleteProject = (project: ProjectDetailType) => {
     confirm({
       title: `Delete project "${project.projectName}"?`,
+      titleProps: { sx: { wordWrap: 'break-word' } },
     })
       .then(() => {
         dispatch(deleteProjectAPI(project.id));
@@ -123,6 +124,7 @@ const Projects = () => {
             component={NavLink}
             to={`/projects/${params.row.id}/board`}
             underline="hover"
+            noWrap
           >
             {params.value}
           </Link>

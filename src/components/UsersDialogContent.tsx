@@ -87,6 +87,7 @@ const UsersDialogContent = () => {
   const handleDeleteUserFromProject = (user: Member) => {
     confirm({
       title: `Delete user "${user.name}" from this project?`,
+      titleProps: { sx: { wordWrap: 'break-word' } },
     })
       .then(() => {
         // Delete user from every task that has that user in
