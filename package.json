@@ -5,7 +5,6 @@
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
-    "@greatsumini/react-facebook-login": "^3.3.2",
     "@hello-pangea/dnd": "^16.2.0",
     "@hookform/resolvers": "^2.9.10",
     "@mui/icons-material": "^5.11.0",

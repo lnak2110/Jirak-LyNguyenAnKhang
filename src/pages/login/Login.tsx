@@ -12,10 +12,8 @@ import {
 } from '../../redux/configStore';
 import { loginAPI } from '../../redux/reducers/userReducer';
 import Loading from '../../components/Loading';
-import FacebookIcon from '@mui/icons-material/Facebook';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -25,7 +23,6 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import FacebookLogin from '@greatsumini/react-facebook-login';
 import image1 from '../../assets/images/login-background-1.jpg';
 import image2 from '../../assets/images/login-background-2.jpg';
 import image3 from '../../assets/images/login-background-3.jpg';
@@ -54,8 +51,6 @@ const randomImage =
   loginBackgroundImages[
     Math.floor(Math.random() * loginBackgroundImages.length)
   ];
-
-const appId = process.env.REACT_APP_FACEBOOK_APP_ID!;
 
 const schema = yup
   .object()
@@ -194,29 +189,6 @@ const Login = () => {
             >
               Log in
             </Button>
-            <Divider>OR</Divider>
-            <FacebookLogin
-              appId={appId}
-              onSuccess={(response) => {
-                console.log('Login Success!', response);
-              }}
-              onFail={(error) => {
-                console.log('Login Failed!', error);
-              }}
-              render={({ onClick }) => (
-                <Button
-                  type="button"
-                  disabled={isSubmitting}
-                  fullWidth
-                  variant="outlined"
-                  startIcon={<FacebookIcon />}
-                  sx={{ my: 2 }}
-                  onClick={onClick}
-                >
-                  Log in with Facebook
-                </Button>
-              )}
-            />
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link component={NavLink} to="/register" variant="body2">
