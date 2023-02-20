@@ -37,9 +37,12 @@ type BoardCardContainerProps = {
 const BoardCardContainer = ({ listTask, index }: BoardCardContainerProps) => {
   return (
     <Paper
-      sx={{ bgcolor: theme.palette.grey[100], width: '100%', display: 'flex' }}
+      sx={{ bgcolor: theme.palette.grey[100], width: '100%', display: 'block' }}
     >
-      <Stack spacing={1} sx={{ p: 1, alignItems: 'flex-start', flexGrow: 1 }}>
+      <Stack
+        spacing={1}
+        sx={{ p: 1, alignItems: 'flex-start', height: '100%' }}
+      >
         <Chip
           variant="filled"
           label={listTask.statusName}
