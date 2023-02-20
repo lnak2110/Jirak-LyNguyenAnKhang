@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -8,7 +8,10 @@ import {
   useAppSelector,
 } from '../redux/configStore';
 import { EditUserFormInputs } from '../types/userTypes';
-import { editCurrentUserProfileAPI } from '../redux/reducers/userReducer';
+import {
+  editCurrentUserProfileAPI,
+  setFalseUserFulfilledAction,
+} from '../redux/reducers/userReducer';
 import { theme } from '../App';
 import ControllerTextField from './ControllerTextField';
 import ControllerPasswordTextField from './ControllerPasswordTextField';
@@ -53,7 +56,7 @@ type UserProfileProps = {
 };
 
 const UserProfile = ({ handleCloseModal }: UserProfileProps) => {
-  const { currentUserData, isLoading } = useAppSelector(
+  const { currentUserData, isLoading, userFulfilled } = useAppSelector(
     (state: RootState) => state.userReducer
   );
 
@@ -75,6 +78,7 @@ const UserProfile = ({ handleCloseModal }: UserProfileProps) => {
   const {
     control,
     handleSubmit,
+    reset,
     formState: { isSubmitting },
   } = useForm<EditUserFormInputs>({
     defaultValues: initialValues,
@@ -82,6 +86,13 @@ const UserProfile = ({ handleCloseModal }: UserProfileProps) => {
     mode: 'onTouched',
     resolver: yupResolver(editUserSchemaYup),
   });
+
+  useEffect(() => {
+    if (userFulfilled) {
+      reset({ ...initialValues });
+      dispatch(setFalseUserFulfilledAction());
+    }
+  }, [userFulfilled, initialValues, reset, dispatch]);
 
   const onSubmit = (data: EditUserFormInputs) => {
     dispatch(editCurrentUserProfileAPI(data));
