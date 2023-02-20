@@ -62,12 +62,6 @@ export const axiosAuth = axios.create({
 
 axiosAuth.interceptors.request.use(
   (config: AxiosRequestConfig) => {
-    // config.headers = {
-    //   ...config.headers,
-    //   ['Authorization']: `Bearer ${process.env.REACT_APP_ACCESS_TOKEN}`,
-    //   ['TokenCybersoft']: process.env.REACT_APP_TOKEN_CYBERSOFT,
-    // };
-
     const token = getCookie(process.env.REACT_APP_ACCESS_TOKEN!);
 
     (config.headers as AxiosHeaders)

@@ -64,15 +64,13 @@ export const loginAPI = createAsyncThunk(
           name,
           phoneNumber,
           email,
-        };
+        } as CurrentUserDataType;
 
         setStore(process.env.REACT_APP_CURRENT_USER_DATA!, currentUserData);
         setStore(process.env.REACT_APP_USER_LOGIN!, { email, accessToken });
         setCookie(process.env.REACT_APP_ACCESS_TOKEN!, accessToken);
 
-        dispatch(
-          saveCurrentUserDataAction(currentUserData as CurrentUserDataType)
-        );
+        dispatch(saveCurrentUserDataAction(currentUserData));
         toast.success(
           `Log in successfully! Welcome ${result.data?.content?.name}!`
         );
@@ -299,29 +297,6 @@ export const deleteUserAPI = createAsyncThunk(
   }
 );
 
-export const loginFacebookAPI = createAsyncThunk(
-  'userReducer/loginFacebookAPI',
-  async (facebookToken: string, { dispatch, rejectWithValue }) => {
-    try {
-      const result = await axiosAuth.post(
-        '/Users/facebookLogin',
-        facebookToken
-      );
-      console.log(result);
-      // if (result?.status === 200) {
-      //   await dispatch(getAllUsersAPI());
-      //   toast.success('Delete user successfully!');
-      // }
-    } catch (error) {
-      console.log(error);
-      if (error) {
-        toast.error('Something wrong happened!');
-        return rejectWithValue('Something wrong happened!');
-      }
-    }
-  }
-);
-
 type InitialStateType = {
   isLoading: boolean;
   userLogin: UserLogin | null;
@@ -412,6 +387,7 @@ const userReducer = createSlice({
     builder.addCase(editCurrentUserProfileAPI.rejected, (state) => {
       state.isLoading = false;
     });
+
     // addUserToProjectAPI, deleteUserFromProjectAPI
     builder.addMatcher(
       isAnyOf(addUserToProjectAPI.pending, deleteUserFromProjectAPI.pending),
