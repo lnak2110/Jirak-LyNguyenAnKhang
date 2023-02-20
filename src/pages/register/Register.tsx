@@ -90,13 +90,13 @@ const Register = () => {
         component={Paper}
         elevation={3}
         sx={{
-          p: 5,
+          p: { xs: 3, sm: 5 },
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
         }}
       >
-        <Typography component="h1" variant="h3" gutterBottom>
+        <Typography component="h1" variant="h3" align="center" gutterBottom>
           Welcome to Jirak!
         </Typography>
         <Box component="form" sx={{ mt: 3 }} onSubmit={handleSubmit(onSubmit)}>
