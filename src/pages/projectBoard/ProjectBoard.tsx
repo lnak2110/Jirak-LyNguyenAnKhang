@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import useTitle from '../../hooks/useTitle';
 import {
   RootState,
   useAppDispatch,
@@ -34,6 +35,8 @@ const ProjectBoard = () => {
   const dispatch = useAppDispatch();
 
   const { projectId } = useParams();
+
+  useTitle(projectDetailWithTasks?.projectName!);
 
   useEffect(() => {
     dispatch(getProjectDetailAPI(projectId!));

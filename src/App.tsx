@@ -25,7 +25,7 @@ import 'react-toastify/dist/ReactToastify.min.css';
 export const theme = createTheme({
   components: {
     MuiMenu: {
-      // defaultProps: { disableScrollLock: true },
+      defaultProps: { disableScrollLock: true },
     },
   },
 });

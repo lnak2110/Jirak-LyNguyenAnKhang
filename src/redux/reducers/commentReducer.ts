@@ -10,7 +10,7 @@ import { axiosAuth } from '../../utils/config';
 
 export const getAllCommentsAPI = createAsyncThunk(
   'commentReducer/getAllCommentsAPI',
-  async (taskId: number) => {
+  async (taskId: number, { rejectWithValue }) => {
     try {
       const result = await axiosAuth.get(`/Comment/getAll?taskId=${taskId}`);
 
@@ -18,14 +18,19 @@ export const getAllCommentsAPI = createAsyncThunk(
         return result.data.content as CommentInTaskType[];
       }
     } catch (error) {
-      console.log(error);
+      if (error) {
+        return rejectWithValue(error);
+      }
     }
   }
 );
 
 export const addCommentToTaskAPI = createAsyncThunk(
   'commentReducer/addCommentToTaskAPI',
-  async (addCommentToTaskData: AddCommentToTaskType, { dispatch }) => {
+  async (
+    addCommentToTaskData: AddCommentToTaskType,
+    { dispatch, rejectWithValue }
+  ) => {
     try {
       const result = await axiosAuth.post(
         '/Comment/insertComment',
@@ -37,14 +42,17 @@ export const addCommentToTaskAPI = createAsyncThunk(
         toast.success('Add a comment successfully!');
       }
     } catch (error) {
-      console.log(error);
+      if (error) {
+        toast.error('Something wrong happened!');
+        return rejectWithValue('Something wrong happened!');
+      }
     }
   }
 );
 
 export const editCommentAPI = createAsyncThunk(
   'commentReducer/editCommentAPI',
-  async (editCommentData: EditCommentType, { dispatch }) => {
+  async (editCommentData: EditCommentType, { dispatch, rejectWithValue }) => {
     try {
       const { taskId, id, contentComment } = editCommentData;
       const result = await axiosAuth.put(
@@ -56,9 +64,9 @@ export const editCommentAPI = createAsyncThunk(
         toast.success('Edit your comment successfully!');
       }
     } catch (error) {
-      console.log(error);
       if (error) {
         toast.error('Something wrong happened!');
+        return rejectWithValue('Something wrong happened!');
       }
     }
   }
@@ -66,7 +74,10 @@ export const editCommentAPI = createAsyncThunk(
 
 export const deleteCommentAPI = createAsyncThunk(
   'commentReducer/deleteCommentAPI',
-  async (deleteCommentData: DeleteCommentType, { dispatch }) => {
+  async (
+    deleteCommentData: DeleteCommentType,
+    { dispatch, rejectWithValue }
+  ) => {
     try {
       const { idComment, taskId } = deleteCommentData;
       const result = await axiosAuth.delete(
@@ -78,9 +89,9 @@ export const deleteCommentAPI = createAsyncThunk(
         toast.success('Delete your comment successfully!');
       }
     } catch (error) {
-      console.log(error);
       if (error) {
         toast.error('Something wrong happened!');
+        return rejectWithValue('Something wrong happened!');
       }
     }
   }
