@@ -47,6 +47,7 @@ const Header = () => {
   const dispatch = useAppDispatch();
 
   const downSm = useMediaQuery(theme.breakpoints.down('sm'));
+  const down320 = useMediaQuery(theme.breakpoints.down(320));
 
   const popupState = usePopupState({
     variant: 'popover',
@@ -109,6 +110,7 @@ const Header = () => {
                     icon={page.icon}
                     component={NavLink}
                     to={page.route}
+                    {...(down320 && { sx: { p: 0 } })}
                   />
                 ))}
               </BottomNavigation>

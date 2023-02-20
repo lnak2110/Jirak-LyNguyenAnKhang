@@ -25,6 +25,19 @@ import Typography from '@mui/material/Typography';
 import { useMediaQuery } from '@mui/material';
 import { DragDropContext, DropResult } from '@hello-pangea/dnd';
 
+const renderButtonAndUsersList = (
+  isSmallScreen: boolean,
+  listLength: number
+) => {
+  if (isSmallScreen && listLength > 0) {
+    return { width: '50%' };
+  } else if (isSmallScreen) {
+    return { width: '100%' };
+  } else {
+    return;
+  }
+};
+
 const ProjectBoard = () => {
   const { projectDetailWithTasks } = useAppSelector(
     (state: RootState) => state.projectReducer
@@ -132,12 +145,24 @@ const ProjectBoard = () => {
               justifyContent: 'space-between',
             }}
           >
-            <Stack direction={'row'} spacing={1}>
+            <Stack
+              direction={'row'}
+              {...(usersInProject?.length && {
+                spacing: {
+                  xs: 1,
+                  sm: 2,
+                },
+              })}
+            >
               <DialogModal
                 buttonOpen={
                   <Button
-                    {...(downSm && { sx: { width: '50%' } })}
+                    sx={renderButtonAndUsersList(
+                      downSm,
+                      usersInProject?.length!
+                    )}
                     startIcon={<AddIcon />}
+                    variant="outlined"
                   >
                     Add User
                   </Button>
@@ -148,7 +173,10 @@ const ProjectBoard = () => {
                 ariaLabel="users-dialog-title"
                 preventCloseBackdrop={false}
               />
-              <AvatarGroup max={downSm ? 3 : 6}>
+              <AvatarGroup
+                max={downSm ? 3 : 6}
+                sx={{ flexGrow: { xs: 0.5, sm: 0 } }}
+              >
                 {usersInProject?.map((user) => (
                   <UserAvatar
                     key={user.userId}
