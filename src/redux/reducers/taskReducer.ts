@@ -13,7 +13,7 @@ import { getProjectDetailAPI } from './projectReducer';
 
 export const getAllStatusAPI = createAsyncThunk(
   'taskReducer/getAllStatusAPI',
-  async () => {
+  async (_, { rejectWithValue }) => {
     try {
       const result = await axiosAuth.get('/Status/getAll');
 
@@ -21,14 +21,17 @@ export const getAllStatusAPI = createAsyncThunk(
         return result.data.content as StatusType[];
       }
     } catch (error) {
-      console.log(error);
+      if (error) {
+        toast.error('Something wrong happened!');
+        return rejectWithValue('Something wrong happened!');
+      }
     }
   }
 );
 
 export const getAllPriorityAPI = createAsyncThunk(
   'taskReducer/getAllPriorityAPI',
-  async () => {
+  async (_, { rejectWithValue }) => {
     try {
       const result = await axiosAuth.get('/Priority/getAll');
 
@@ -36,14 +39,17 @@ export const getAllPriorityAPI = createAsyncThunk(
         return result.data.content as PriorityType[];
       }
     } catch (error) {
-      console.log(error);
+      if (error) {
+        toast.error('Something wrong happened!');
+        return rejectWithValue('Something wrong happened!');
+      }
     }
   }
 );
 
 export const getAllTaskTypeAPI = createAsyncThunk(
   'taskReducer/getAllTaskTypeAPI',
-  async () => {
+  async (_, { rejectWithValue }) => {
     try {
       const result = await axiosAuth.get('/TaskType/getAll');
 
@@ -51,7 +57,10 @@ export const getAllTaskTypeAPI = createAsyncThunk(
         return result.data.content as TaskTypeType[];
       }
     } catch (error) {
-      console.log(error);
+      if (error) {
+        toast.error('Something wrong happened!');
+        return rejectWithValue('Something wrong happened!');
+      }
     }
   }
 );
@@ -74,13 +83,12 @@ export const createTaskAPI = createAsyncThunk(
         '/Project/createTask',
         dataCreateTask
       );
-      console.log(result);
+
       if (result?.status === 200) {
         dispatch(getProjectDetailAPI(createTaskFormInputs.projectId));
         toast.success('Create a task successfully!');
       }
     } catch (error: any) {
-      console.log(error);
       if (error.response?.status === 403) {
         toast.error('You are not the creator of this project!');
         return rejectWithValue('You are not the creator of this project!');
@@ -103,7 +111,7 @@ export const updateStatusTaskAPI = createAsyncThunk(
       statusId: string;
       projectId: string;
     },
-    { dispatch }
+    { dispatch, rejectWithValue }
   ) => {
     const { projectId, ...restUpdateStatusData } = updateStatusData;
 
@@ -116,10 +124,10 @@ export const updateStatusTaskAPI = createAsyncThunk(
         dispatch(getProjectDetailAPI(projectId));
       }
     } catch (error: any) {
-      console.log(error);
       if (error) {
         toast.error('Something wrong happened!');
         dispatch(getProjectDetailAPI(projectId));
+        return rejectWithValue('Something wrong happened!');
       }
     }
   }
@@ -127,7 +135,7 @@ export const updateStatusTaskAPI = createAsyncThunk(
 
 export const getTaskDetailAPI = createAsyncThunk(
   'taskReducer/getTaskDetailAPI',
-  async (taskId: number) => {
+  async (taskId: number, { rejectWithValue }) => {
     try {
       const result = await axiosAuth.get(
         `/Project/getTaskDetail?taskId=${taskId}`
@@ -137,9 +145,9 @@ export const getTaskDetailAPI = createAsyncThunk(
         return result.data.content as TaskDetailType;
       }
     } catch (error) {
-      console.log(error);
       if (error) {
         toast.error('Something wrong happened!');
+        return rejectWithValue('Something wrong happened!');
       }
     }
   }
@@ -163,21 +171,18 @@ export const updateTaskAPI = createAsyncThunk(
         '/Project/updateTask',
         dataUpdateTask
       );
-      console.log(result);
+
       if (result?.status === 200) {
         await dispatch(getProjectDetailAPI(updateTaskFormInputs.projectId));
         toast.success('Update a task successfully!');
       }
     } catch (error: any) {
-      console.log(error);
-      if (error) {
-        if (error.response?.status === 403) {
-          toast.error('You are not the creator of this project!');
-          return rejectWithValue('You are not the creator of this project!');
-        } else {
-          toast.error('Something wrong happened!');
-          return rejectWithValue('Something wrong happened!');
-        }
+      if (error.response?.status === 403) {
+        toast.error('You are not the creator of this project!');
+        return rejectWithValue('You are not the creator of this project!');
+      } else {
+        toast.error('Something wrong happened!');
+        return rejectWithValue('Something wrong happened!');
       }
     }
   }
@@ -202,7 +207,6 @@ export const deleteTaskAPI = createAsyncThunk(
         toast.success('Delete a task successfully!');
       }
     } catch (error: any) {
-      console.log(error);
       if (error.response?.status === 403) {
         toast.error('You are not the creator of this project!');
         return rejectWithValue('You are not the creator of this project!');

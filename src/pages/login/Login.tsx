@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import useTitle from '../../hooks/useTitle';
 import { LoginFormInputs } from '../../types/userTypes';
 import {
   RootState,
@@ -25,16 +26,16 @@ import Typography from '@mui/material/Typography';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import FacebookLogin from '@greatsumini/react-facebook-login';
-import image1 from '../../assets/login-background-1.jpg';
-import image2 from '../../assets/login-background-2.jpg';
-import image3 from '../../assets/login-background-3.jpg';
-import image4 from '../../assets/login-background-4.jpg';
-import image5 from '../../assets/login-background-5.jpg';
-import image6 from '../../assets/login-background-6.jpg';
-import image7 from '../../assets/login-background-7.jpg';
-import image8 from '../../assets/login-background-8.jpg';
-import image9 from '../../assets/login-background-9.jpg';
-import image10 from '../../assets/login-background-10.jpg';
+import image1 from '../../assets/images/login-background-1.jpg';
+import image2 from '../../assets/images/login-background-2.jpg';
+import image3 from '../../assets/images/login-background-3.jpg';
+import image4 from '../../assets/images/login-background-4.jpg';
+import image5 from '../../assets/images/login-background-5.jpg';
+import image6 from '../../assets/images/login-background-6.jpg';
+import image7 from '../../assets/images/login-background-7.jpg';
+import image8 from '../../assets/images/login-background-8.jpg';
+import image9 from '../../assets/images/login-background-9.jpg';
+import image10 from '../../assets/images/login-background-10.jpg';
 
 const loginBackgroundImages = [
   image1,
@@ -76,7 +77,10 @@ const schema = yup
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { isLoading } = useAppSelector((state: RootState) => state.userReducer);
+
   const dispatch = useAppDispatch();
+
+  useTitle('Login');
 
   const {
     register,

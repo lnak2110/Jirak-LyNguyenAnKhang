@@ -32,18 +32,18 @@ export const registerAPI = createAsyncThunk(
   async (registerFormInputs: RegisterFormInputs, { rejectWithValue }) => {
     try {
       const result = await axiosAuth.post('/Users/signup', registerFormInputs);
-      console.log(result);
+
       if (result?.status === 200) {
         router.navigate('/login');
         toast.success('Register successfully! Please log in to continue.');
       }
     } catch (error: any) {
-      console.log(error);
       if (error.response?.status === 400) {
         toast.error('Email is already existed!');
         return rejectWithValue('Email is already existed!');
       } else {
         toast.error('Something wrong happened!');
+        return rejectWithValue('Something wrong happened!');
       }
     }
   }
@@ -54,7 +54,7 @@ export const loginAPI = createAsyncThunk(
   async (loginFormInputs: LoginFormInputs, { dispatch, rejectWithValue }) => {
     try {
       const result = await axiosAuth.post('/Users/signin', loginFormInputs);
-      console.log(result);
+
       if (result?.status === 200) {
         const { id, avatar, name, phoneNumber, email, accessToken } =
           result.data.content;
@@ -79,12 +79,12 @@ export const loginAPI = createAsyncThunk(
         return { email, accessToken } as UserLogin;
       }
     } catch (error: any) {
-      console.log(error);
       if (error.response?.status === 400) {
         toast.error('Wrong email or password!');
         return rejectWithValue('Wrong email or password!');
       } else {
         toast.error('Something wrong happened!');
+        return rejectWithValue('Something wrong happened!');
       }
     }
   }
@@ -92,7 +92,7 @@ export const loginAPI = createAsyncThunk(
 
 export const getAllUsersAPI = createAsyncThunk(
   'userReducer/getAllUsersAPI',
-  async () => {
+  async (_, { rejectWithValue }) => {
     try {
       const result = await axiosAuth.get('/Users/getUser');
 
@@ -100,14 +100,19 @@ export const getAllUsersAPI = createAsyncThunk(
         return result.data.content as UserDetailType[];
       }
     } catch (error) {
-      console.log(error);
+      if (error) {
+        return rejectWithValue('Something wrong happened!');
+      }
     }
   }
 );
 
 export const addUserToProjectAPI = createAsyncThunk(
   'userReducer/addUserToProjectAPI',
-  async (userAndProjectData: UserAndProjectType, { dispatch }) => {
+  async (
+    userAndProjectData: UserAndProjectType,
+    { dispatch, rejectWithValue }
+  ) => {
     try {
       const result = await axiosAuth.post(
         '/Project/assignUserProject',
@@ -122,11 +127,12 @@ export const addUserToProjectAPI = createAsyncThunk(
         toast.success('Add user to this project successfully!');
       }
     } catch (error: any) {
-      console.log(error);
       if (error.response?.status === 403) {
         toast.error('You are not the creator of this project!');
+        return rejectWithValue('You are not the creator of this project!');
       } else {
         toast.error('Something wrong happened!');
+        return rejectWithValue('Something wrong happened!');
       }
     }
   }
@@ -134,18 +140,23 @@ export const addUserToProjectAPI = createAsyncThunk(
 
 export const deleteUserFromTaskAPI = createAsyncThunk(
   'userReducer/deleteUserFromTaskAPI',
-  async (userAndTaskData: UserAndTaskType) => {
+  async (userAndTaskData: UserAndTaskType, { rejectWithValue }) => {
     try {
       await axiosAuth.post('/Project/removeUserFromTask', userAndTaskData);
     } catch (error) {
-      console.log(error);
+      if (error) {
+        return rejectWithValue('Something wrong happened!');
+      }
     }
   }
 );
 
 export const deleteUserFromProjectAPI = createAsyncThunk(
   'userReducer/deleteUserFromProjectAPI',
-  async (userAndProjectData: UserAndProjectType, { dispatch }) => {
+  async (
+    userAndProjectData: UserAndProjectType,
+    { dispatch, rejectWithValue }
+  ) => {
     try {
       const result = await axiosAuth.post(
         '/Project/removeUserFromProject',
@@ -160,11 +171,12 @@ export const deleteUserFromProjectAPI = createAsyncThunk(
         toast.success('Delete user from this project successfully!');
       }
     } catch (error: any) {
-      console.log(error);
       if (error.response?.status === 403) {
         toast.error('You are not the creator of this project!');
+        return rejectWithValue('You are not the creator of this project!');
       } else {
         toast.error('Something wrong happened!');
+        return rejectWithValue('Something wrong happened!');
       }
     }
   }
@@ -175,7 +187,7 @@ export const getUserByIdAPI = createAsyncThunk(
   async (userId: string, { rejectWithValue }) => {
     try {
       const result = await axiosAuth.get(`/Users/getUser?keyword=${userId}`);
-      console.log(result);
+
       if (result?.status === 200) {
         const allUsersFound = result?.data?.content as UserDetailType[];
         const userFound = allUsersFound.find((user) => user.userId === +userId);
@@ -185,7 +197,6 @@ export const getUserByIdAPI = createAsyncThunk(
         return null;
       }
     } catch (error) {
-      console.log(error);
       if (error) {
         toast.error('Something wrong happened!');
         return rejectWithValue('Something wrong happened!');
@@ -219,7 +230,6 @@ export const editCurrentUserProfileAPI = createAsyncThunk(
         toast.success('Update user information successfully!');
       }
     } catch (error) {
-      console.log(error);
       if (error) {
         toast.error('Something wrong happened!');
         return rejectWithValue('Something wrong happened!');
@@ -236,7 +246,7 @@ export const editUserAPI = createAsyncThunk(
   ) => {
     try {
       const result = await axiosAuth.put('/Users/editUser', editUserFormInputs);
-      console.log(result);
+
       if (result?.status === 200) {
         await dispatch(getUserByIdAPI(editUserFormInputs.id));
 
@@ -262,7 +272,6 @@ export const editUserAPI = createAsyncThunk(
         toast.success('Update user information successfully!');
       }
     } catch (error) {
-      console.log(error);
       if (error) {
         toast.error('Something wrong happened!');
         return rejectWithValue('Something wrong happened!');
@@ -276,13 +285,12 @@ export const deleteUserAPI = createAsyncThunk(
   async (id: number, { dispatch, rejectWithValue }) => {
     try {
       const result = await axiosAuth.delete(`/Users/deleteUser?id=${id}`);
-      console.log(result);
+
       if (result?.status === 200) {
         await dispatch(getAllUsersAPI());
         toast.success('Delete user successfully!');
       }
     } catch (error) {
-      console.log(error);
       if (error) {
         toast.error('Something wrong happened!');
         return rejectWithValue('Something wrong happened!');

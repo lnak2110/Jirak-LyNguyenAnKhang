@@ -2,15 +2,16 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import {
-  CreateProjectFormInputs,
-  ProjectCategoryType,
-} from '../../types/projectTypes';
+import useTitle from '../../hooks/useTitle';
 import {
   RootState,
   useAppDispatch,
   useAppSelector,
 } from '../../redux/configStore';
+import {
+  CreateProjectFormInputs,
+  ProjectCategoryType,
+} from '../../types/projectTypes';
 import {
   createProjectAPI,
   getProjectCategoriesAPI,
@@ -26,6 +27,8 @@ const CreateProject = () => {
     (state: RootState) => state.projectReducer
   );
   const dispatch = useAppDispatch();
+
+  useTitle('Create Project');
 
   useEffect(() => {
     dispatch(getProjectCategoriesAPI());

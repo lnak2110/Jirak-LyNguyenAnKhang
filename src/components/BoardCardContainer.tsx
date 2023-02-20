@@ -12,11 +12,11 @@ import { Droppable } from '@hello-pangea/dnd';
 
 const statusChips = [
   {
-    color: 'primary',
+    color: 'deepPurple',
     icon: <ReceiptLongIcon />,
   },
   {
-    color: 'secondary',
+    color: 'cyan',
     icon: <NextPlanIcon />,
   },
   {
@@ -24,7 +24,7 @@ const statusChips = [
     icon: <EngineeringIcon />,
   },
   {
-    color: 'success',
+    color: 'green',
     icon: <TaskIcon />,
   },
 ] as const;
@@ -36,13 +36,12 @@ type BoardCardContainerProps = {
 
 const BoardCardContainer = ({ listTask, index }: BoardCardContainerProps) => {
   return (
-    <Paper sx={{ bgcolor: theme.palette.grey[100], width: '100%' }}>
-      <Stack
-        spacing={2}
-        sx={{ p: 1, alignItems: 'flex-start', height: '100%' }}
-      >
+    <Paper
+      sx={{ bgcolor: theme.palette.grey[100], width: '100%', display: 'flex' }}
+    >
+      <Stack spacing={1} sx={{ p: 1, alignItems: 'flex-start', flexGrow: 1 }}>
         <Chip
-          variant="outlined"
+          variant="filled"
           label={listTask.statusName}
           color={statusChips[index].color}
           icon={statusChips[index].icon}
@@ -51,7 +50,7 @@ const BoardCardContainer = ({ listTask, index }: BoardCardContainerProps) => {
         <Droppable droppableId={listTask.statusId}>
           {(provided) => (
             <Stack
-              sx={{ width: '100%', height: '100%', mb: 0 }}
+              sx={{ width: '100%', height: '100%' }}
               ref={provided.innerRef}
               {...provided.droppableProps}
             >

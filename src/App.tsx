@@ -18,14 +18,46 @@ import Register from './pages/register/Register';
 import Users from './pages/users/Users';
 import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { cyan, deepPurple, green, indigo } from '@mui/material/colors';
 import { ConfirmProvider } from 'material-ui-confirm';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 
 export const theme = createTheme({
+  palette: {
+    cyan: {
+      main: cyan[700],
+      contrastText: '#fff',
+    },
+    deepPurple: {
+      main: deepPurple[400],
+      contrastText: '#fff',
+    },
+    green: {
+      main: green[600],
+      contrastText: '#fff',
+    },
+    indigo: {
+      main: indigo[600],
+      contrastText: '#fff',
+    },
+  },
   components: {
     MuiMenu: {
-      // defaultProps: { disableScrollLock: true },
+      defaultProps: { disableScrollLock: true },
+    },
+    // Prevent scrollbar flickering when open/close menu
+    MuiCssBaseline: {
+      styleOverrides: {
+        html: {
+          overflow: 'hidden',
+        },
+
+        body: {
+          overflow: 'auto !important',
+          maxHeight: '100vh',
+        },
+      },
     },
   },
 });

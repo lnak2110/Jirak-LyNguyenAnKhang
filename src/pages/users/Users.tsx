@@ -1,4 +1,5 @@
 import { useEffect, useMemo } from 'react';
+import useTitle from '../../hooks/useTitle';
 import {
   RootState,
   useAppDispatch,
@@ -64,6 +65,7 @@ const RowActionsMenu = ({ user }: { user: UserDetailType }) => {
       </Tooltip>
       <Menu
         elevation={2}
+        keepMounted
         {...bindMenu(popupState)}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -106,6 +108,8 @@ const Users = () => {
   );
 
   const dispatch = useAppDispatch();
+
+  useTitle('Users');
 
   useEffect(() => {
     dispatch(getAllUsersAPI());

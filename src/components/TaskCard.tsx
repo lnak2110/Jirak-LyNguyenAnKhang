@@ -48,7 +48,7 @@ const taskTypeChips = [
     icon: <BugReportIcon />,
   },
   {
-    color: 'info',
+    color: 'indigo',
     icon: <AssignmentIcon />,
   },
 ] as const;
@@ -91,7 +91,7 @@ const TaskCard = ({ task, index }: TaskCardProps) => {
             <Card
               sx={{
                 '& .MuiCardContent-root': { p: 2 },
-                mb: 1,
+                mt: 1,
                 cursor: 'grab',
               }}
               {...provided.draggableProps}

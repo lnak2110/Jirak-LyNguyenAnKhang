@@ -13,7 +13,13 @@ const HomeTemplate = () => {
   return (
     <>
       <Header />
-      <Container maxWidth="xl" sx={{ py: 4 }}>
+      <Container
+        maxWidth="xl"
+        sx={{
+          pt: 4,
+          pb: { xs: 11, sm: 4 },
+        }}
+      >
         <Outlet />
       </Container>
     </>

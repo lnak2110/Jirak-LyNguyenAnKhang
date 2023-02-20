@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import { NavLink } from 'react-router-dom';
+import useTitle from '../../hooks/useTitle';
 import {
   RootState,
   useAppDispatch,
@@ -91,6 +92,8 @@ const Projects = () => {
   );
 
   const dispatch = useAppDispatch();
+
+  useTitle('Projects');
 
   useEffect(() => {
     dispatch(getAllProjectsAPI());

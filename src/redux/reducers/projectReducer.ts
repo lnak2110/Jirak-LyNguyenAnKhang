@@ -11,21 +11,23 @@ import { axiosAuth } from '../../utils/config';
 
 export const getAllProjectsAPI = createAsyncThunk(
   'projectReducer/getAllProjectsAPI',
-  async () => {
+  async (_, { rejectWithValue }) => {
     try {
       const result = await axiosAuth.get('/Project/getAllProject');
       if (result?.status === 200) {
         return result.data.content as ProjectDetailType[];
       }
     } catch (error) {
-      console.log(error);
+      if (error) {
+        return rejectWithValue(error);
+      }
     }
   }
 );
 
 export const getProjectCategoriesAPI = createAsyncThunk(
   'projectReducer/getProjectCategoriesAPI',
-  async () => {
+  async (_, { rejectWithValue }) => {
     try {
       const result = await axiosAuth.get('/ProjectCategory');
 
@@ -33,7 +35,9 @@ export const getProjectCategoriesAPI = createAsyncThunk(
         return result.data.content as ProjectCategoryType[];
       }
     } catch (error) {
-      console.log(error);
+      if (error) {
+        return rejectWithValue(error);
+      }
     }
   }
 );
@@ -56,12 +60,10 @@ export const createProjectAPI = createAsyncThunk(
         createProjectData
       );
 
-      console.log(result);
       if (result?.status === 200) {
         toast.success('Create a project successfully!');
       }
     } catch (error: any) {
-      console.log(error);
       if (error.response?.status === 500) {
         toast.error('Project name is already existed!');
         return rejectWithValue('Project name is already existed!');
@@ -85,8 +87,6 @@ export const getProjectDetailAPI = createAsyncThunk(
         return result.data.content as ProjectDetailWithTasksType;
       }
     } catch (error: any) {
-      console.log(error);
-      // Axios network / Server error???
       if (error) {
         toast.error('Something wrong happened!');
         return rejectWithValue('Something wrong happened!');
@@ -113,15 +113,12 @@ export const updateProjectAPI = createAsyncThunk(
         editProjectData
       );
 
-      console.log(result);
-
       if (result?.status === 200) {
         // API from backend send only categoryId (number)
         await dispatch(getProjectDetailAPI(result.data.content.id));
         toast.success('Update a project successfully!');
       }
     } catch (error: any) {
-      console.log(error);
       if (error) {
         if (error.response?.status === 403) {
           toast.error('You are not the creator of this project!');
@@ -143,14 +140,11 @@ export const deleteProjectAPI = createAsyncThunk(
         `/Project/deleteProject?projectId=${projectId}`
       );
 
-      console.log(result);
-
       if (result?.status === 200) {
         await dispatch(getAllProjectsAPI());
         toast.success('Delete a project successfully!');
       }
     } catch (error: any) {
-      console.log(error);
       if (error) {
         if (error.response?.status === 403) {
           toast.error('You are not the creator of this project!');
