@@ -299,6 +299,7 @@ export const deleteUserAPI = createAsyncThunk(
 
 type InitialStateType = {
   isLoading: boolean;
+  userFulfilled: boolean;
   userLogin: UserLogin | null;
   users: UserDetailType[];
   userFound: UserDetailType | null;
@@ -307,6 +308,7 @@ type InitialStateType = {
 
 const initialState = {
   isLoading: false,
+  userFulfilled: false,
   currentUserData:
     getStoreJson(process.env.REACT_APP_CURRENT_USER_DATA!) || null,
   userLogin: getStoreJson(process.env.REACT_APP_USER_LOGIN!) || null,
@@ -330,6 +332,9 @@ const userReducer = createSlice({
     ) => {
       state.currentUserData = payload;
       setStore(process.env.REACT_APP_CURRENT_USER_DATA!, payload);
+    },
+    setFalseUserFulfilledAction: (state) => {
+      state.userFulfilled = false;
     },
   },
   extraReducers: (builder) => {
@@ -383,6 +388,7 @@ const userReducer = createSlice({
     });
     builder.addCase(editCurrentUserProfileAPI.fulfilled, (state) => {
       state.isLoading = false;
+      state.userFulfilled = true;
     });
     builder.addCase(editCurrentUserProfileAPI.rejected, (state) => {
       state.isLoading = false;
@@ -413,6 +419,10 @@ const userReducer = createSlice({
   },
 });
 
-export const { logoutAction, saveCurrentUserDataAction } = userReducer.actions;
+export const {
+  logoutAction,
+  saveCurrentUserDataAction,
+  setFalseUserFulfilledAction,
+} = userReducer.actions;
 
 export default userReducer.reducer;

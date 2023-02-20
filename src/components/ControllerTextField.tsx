@@ -30,7 +30,7 @@ const ControllerTextField = <T extends FieldValues>({
           required={isRequired}
           fullWidth
           margin="dense"
-          id={name}
+          id={`${name}-${label}`}
           label={label}
           autoComplete={name}
           error={!!error}
