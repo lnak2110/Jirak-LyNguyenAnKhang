@@ -42,24 +42,6 @@ export const theme = createTheme({
       contrastText: '#fff',
     },
   },
-  components: {
-    MuiMenu: {
-      defaultProps: { disableScrollLock: true },
-    },
-    // Prevent scrollbar flickering when open/close menu
-    MuiCssBaseline: {
-      styleOverrides: {
-        html: {
-          overflow: 'hidden',
-        },
-
-        body: {
-          overflow: 'auto !important',
-          maxHeight: '100vh',
-        },
-      },
-    },
-  },
 });
 
 export const router = createBrowserRouter([

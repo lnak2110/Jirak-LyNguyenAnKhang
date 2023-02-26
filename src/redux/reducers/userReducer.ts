@@ -6,6 +6,7 @@ import {
 } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
 import { router } from '../../App';
+import { ProjectDetailWithTasksType } from '../../types/projectTypes';
 import {
   CurrentUserDataType,
   EditUserFormInputs,
@@ -153,7 +154,7 @@ export const deleteUserFromProjectAPI = createAsyncThunk(
   'userReducer/deleteUserFromProjectAPI',
   async (
     userAndProjectData: UserAndProjectType,
-    { dispatch, rejectWithValue }
+    { dispatch, getState, rejectWithValue }
   ) => {
     try {
       const result = await axiosAuth.post(
@@ -162,10 +163,30 @@ export const deleteUserFromProjectAPI = createAsyncThunk(
       );
 
       if (result?.status === 200) {
+        const { userId, projectId } = userAndProjectData;
+
         // Refresh users list in the project
-        await dispatch(
-          getProjectDetailAPI(userAndProjectData.projectId.toString())
+        await dispatch(getProjectDetailAPI(projectId.toString()));
+
+        const state = getState() as RootState;
+        const { projectDetailWithTasks } = state.projectReducer as {
+          projectDetailWithTasks: ProjectDetailWithTasksType;
+        };
+
+        // Delete user from every task that has that user in
+        projectDetailWithTasks?.lstTask.forEach((list) =>
+          list.lstTaskDeTail?.forEach(async (task) => {
+            if (task.assigness.find((assignee) => assignee.id === userId)) {
+              await dispatch(
+                deleteUserFromTaskAPI({
+                  taskId: task.taskId,
+                  userId: userId,
+                })
+              );
+            }
+          })
         );
+
         toast.success('Delete user from this project successfully!');
       }
     } catch (error: any) {
