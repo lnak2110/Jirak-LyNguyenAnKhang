@@ -8,7 +8,6 @@ import {
 import {
   addUserToProjectAPI,
   deleteUserFromProjectAPI,
-  deleteUserFromTaskAPI,
   getAllUsersAPI,
 } from '../redux/reducers/userReducer';
 import { getAllProjectsAPI } from '../redux/reducers/projectReducer';
@@ -41,9 +40,6 @@ const ProjectsUsersDialogContent = ({
 }: ProjectsUsersDialogContentProps) => {
   const { users, isLoading } = useAppSelector(
     (state: RootState) => state.userReducer
-  );
-  const { projectDetailWithTasks } = useAppSelector(
-    (state: RootState) => state.projectReducer
   );
 
   const dispatch = useAppDispatch();
@@ -80,22 +76,6 @@ const ProjectsUsersDialogContent = ({
       deletedMembers?.forEach(async (member) => {
         await dispatch(
           deleteUserFromProjectAPI({ userId: member.userId!, projectId })
-        );
-
-        // Delete user from every task that has that user in
-        projectDetailWithTasks?.lstTask.forEach((list) =>
-          list.lstTaskDeTail?.forEach(async (task) => {
-            if (
-              task.assigness.find((assignee) => assignee.id === member.userId)
-            ) {
-              await dispatch(
-                deleteUserFromTaskAPI({
-                  taskId: task.taskId,
-                  userId: member.userId!,
-                })
-              );
-            }
-          })
         );
       });
 
