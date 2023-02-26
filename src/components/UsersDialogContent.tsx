@@ -11,6 +11,7 @@ import {
   addUserToProjectAPI,
   deleteUserFromProjectAPI,
   getAllUsersAPI,
+  getUserByProjectIdAPI,
 } from '../redux/reducers/userReducer';
 import { getProjectDetailAPI } from '../redux/reducers/projectReducer';
 import { removeAccents } from '../utils/config';
@@ -35,11 +36,8 @@ import { useMediaQuery } from '@mui/material';
 import { useConfirm } from 'material-ui-confirm';
 
 const UsersDialogContent = () => {
-  const { users, isLoading } = useAppSelector(
+  const { users, usersInProject, isLoading } = useAppSelector(
     (state: RootState) => state.userReducer
-  );
-  const { projectDetailWithTasks } = useAppSelector(
-    (state: RootState) => state.projectReducer
   );
 
   const [keyword, setKeyword] = useState('');
@@ -52,14 +50,13 @@ const UsersDialogContent = () => {
 
   useEffect(() => {
     dispatch(getProjectDetailAPI(projectId!));
+    dispatch(getUserByProjectIdAPI(projectId!));
     dispatch(getAllUsersAPI());
   }, [dispatch, projectId]);
 
   const confirm = useConfirm();
 
   const downSm = useMediaQuery(theme.breakpoints.down('sm'));
-
-  const usersInProject = projectDetailWithTasks?.members;
 
   // Users outside of the project
   const usersOutside = users.filter(

@@ -26,7 +26,6 @@ import {
   setStore,
 } from '../../utils/config';
 import { RootState } from '../configStore';
-import { getProjectDetailAPI } from './projectReducer';
 
 export const registerAPI = createAsyncThunk(
   'userReducer/registerAPI',
@@ -120,9 +119,7 @@ export const addUserToProjectAPI = createAsyncThunk(
 
       if (result?.status === 200) {
         // Refresh users list in the project
-        await dispatch(
-          getProjectDetailAPI(userAndProjectData.projectId.toString())
-        );
+        await dispatch(getUserByProjectIdAPI(userAndProjectData.projectId));
         toast.success('Add user to this project successfully!');
       }
     } catch (error: any) {
@@ -166,7 +163,7 @@ export const deleteUserFromProjectAPI = createAsyncThunk(
         const { userId, projectId } = userAndProjectData;
 
         // Refresh users list in the project
-        await dispatch(getProjectDetailAPI(projectId.toString()));
+        await dispatch(getUserByProjectIdAPI(projectId));
 
         const state = getState() as RootState;
         const { projectDetailWithTasks } = state.projectReducer as {
@@ -318,11 +315,32 @@ export const deleteUserAPI = createAsyncThunk(
   }
 );
 
+export const getUserByProjectIdAPI = createAsyncThunk(
+  'userReducer/getUserByProjectIdAPI',
+  async (projectId: string | number, { rejectWithValue }) => {
+    try {
+      const result = await axiosAuth.get(
+        `/Users/getUserByProjectId?idProject=${projectId}`
+      );
+
+      if (result?.status === 200) {
+        return result.data.content as UserDetailType[];
+      }
+    } catch (error: any) {
+      if (error) {
+        toast.error('Something wrong happened!');
+        return rejectWithValue('Something wrong happened!');
+      }
+    }
+  }
+);
+
 type InitialStateType = {
   isLoading: boolean;
   userFulfilled: boolean;
   userLogin: UserLogin | null;
   users: UserDetailType[];
+  usersInProject: UserDetailType[] | null;
   userFound: UserDetailType | null;
   currentUserData: CurrentUserDataType | null;
 };
@@ -334,6 +352,7 @@ const initialState = {
     getStoreJson(process.env.REACT_APP_CURRENT_USER_DATA!) || null,
   userLogin: getStoreJson(process.env.REACT_APP_USER_LOGIN!) || null,
   users: [],
+  usersInProject: [],
   userFound: null,
 } as InitialStateType;
 
@@ -412,6 +431,17 @@ const userReducer = createSlice({
       state.userFulfilled = true;
     });
     builder.addCase(editCurrentUserProfileAPI.rejected, (state) => {
+      state.isLoading = false;
+    });
+    // getUserByProjectIdAPI
+    builder.addCase(getUserByProjectIdAPI.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(getUserByProjectIdAPI.fulfilled, (state, { payload }) => {
+      state.isLoading = false;
+      state.usersInProject = payload!;
+    });
+    builder.addCase(getUserByProjectIdAPI.rejected, (state) => {
       state.isLoading = false;
     });
 
