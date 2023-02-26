@@ -11,19 +11,26 @@ import {
   deleteProjectAPI,
   getAllProjectsAPI,
 } from '../../redux/reducers/projectReducer';
+import { theme } from '../../App';
+import DialogModal from '../../components/DialogModal';
 import Loading from '../../components/Loading';
+import ProjectsUsersDialogContent from '../../components/ProjectsUsersDialogContent';
 import UsersAvatarGroup from '../../components/UsersAvatarGroup';
 import MUIDataGrid from '../../components/MUIDataGrid';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
+import Link from '@mui/material/Link';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
+import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
-import Link from '@mui/material/Link';
+import Typography from '@mui/material/Typography';
 import {
   GridColDef,
   GridRenderCellParams,
@@ -91,6 +98,9 @@ const Projects = () => {
   const { projects, isLoading } = useAppSelector(
     (state: RootState) => state.projectReducer
   );
+  const { currentUserData } = useAppSelector(
+    (state: RootState) => state.userReducer
+  );
 
   const dispatch = useAppDispatch();
 
@@ -141,17 +151,57 @@ const Projects = () => {
         headerName: 'Creator',
         minWidth: 150,
         flex: 1,
+        renderCell: (params) => (
+          <Typography>{params.row.creator.name}</Typography>
+        ),
       },
       {
         field: 'members',
         headerName: 'Members',
-        minWidth: 150,
-        flex: 1,
+        minWidth: 180,
+        flex: 1.2,
         filterable: false,
         sortable: false,
-        renderCell: (params) => (
-          <UsersAvatarGroup members={params.value} maxAvatarsDisplayed={3} />
-        ),
+        renderCell: (params) => {
+          if (currentUserData?.id === params.row.creator.id) {
+            return (
+              <Stack direction="row">
+                <DialogModal
+                  maxWidthValue="sm"
+                  heightValue="300px"
+                  preventCloseBackdrop
+                  buttonOpen={
+                    <Avatar
+                      sx={{
+                        bgcolor: theme.palette.primary.light,
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <PersonAddIcon />
+                    </Avatar>
+                  }
+                  title={params.row.projectName}
+                  popupId={`project-${params.row.id}-users`}
+                  ariaLabel="project-users-dialog"
+                >
+                  <ProjectsUsersDialogContent
+                    membersInProject={params.value}
+                    projectId={params.row.id}
+                  />
+                </DialogModal>
+
+                <UsersAvatarGroup
+                  members={params.value}
+                  maxAvatarsDisplayed={3}
+                />
+              </Stack>
+            );
+          }
+
+          return (
+            <UsersAvatarGroup members={params.value} maxAvatarsDisplayed={3} />
+          );
+        },
       },
       {
         field: 'actions',
@@ -165,7 +215,7 @@ const Projects = () => {
         ),
       },
     ],
-    []
+    [currentUserData]
   );
 
   const rows = useMemo(
@@ -177,7 +227,7 @@ const Projects = () => {
           id,
           projectName,
           categoryName,
-          creator: creator.name,
+          creator,
           members,
         };
       }),
