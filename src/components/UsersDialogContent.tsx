@@ -75,9 +75,10 @@ const UsersDialogContent = () => {
     setKeyword(e.target.value);
   };
 
-  const handleAddUserToProject = (userId: number) => {
+  const handleAddUserToProject = async (userId: number) => {
     const userAndProjectData = { userId, projectId: +projectId! };
-    dispatch(addUserToProjectAPI(userAndProjectData));
+    await dispatch(addUserToProjectAPI(userAndProjectData));
+    dispatch(getProjectDetailAPI(projectId!));
   };
 
   const handleDeleteUserFromProject = (user: Member) => {
